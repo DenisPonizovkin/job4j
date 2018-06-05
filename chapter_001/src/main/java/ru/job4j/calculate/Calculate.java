@@ -5,7 +5,7 @@ package ru.job4j.calculate;
  *
  * @author Denis Ponizovkin (denis.ponizovkin@gmail.com)
  */
-class Calculate {
+public class Calculate {
 	/**
 	 * Main.
 	 * @param args: args.
