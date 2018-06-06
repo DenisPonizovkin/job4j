@@ -41,7 +41,6 @@ public class IteratorArray2D implements Iterator {
     @Override
     public boolean hasNext() {
         boolean is = currentNumber < numberOfElements;
-        System.out.println(currentNumber + " <=> " + numberOfElements + ": " + is);
         return is;
     }
 
