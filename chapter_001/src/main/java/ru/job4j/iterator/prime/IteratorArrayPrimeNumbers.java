@@ -34,9 +34,11 @@ public class IteratorArrayPrimeNumbers implements Iterator {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        for (++index; index < array.length; index++) {
+        for (; index < array.length; index++) {
             if (isPrimeNumber(array[index])) {
-                return array[index];
+                int elem = array[index];
+                ++index;
+                return elem;
             }
         }
         throw new NoSuchElementException();
@@ -47,7 +49,7 @@ public class IteratorArrayPrimeNumbers implements Iterator {
      * @return id of first prime number after index.
      */
     private int primeNumberId() {
-        for (int i = index + 1; i < array.length; i++) {
+        for (int i = index; i < array.length; i++) {
            if (isPrimeNumber(array[i])) {
                return i;
            }
@@ -61,6 +63,9 @@ public class IteratorArrayPrimeNumbers implements Iterator {
      * @return - return true if the n is prime, false otherwise.
      */
     private boolean isPrimeNumber(int n) {
+        if (n == 1) {
+            return false;
+        }
         if (n == 2) {
             return true;
         }
