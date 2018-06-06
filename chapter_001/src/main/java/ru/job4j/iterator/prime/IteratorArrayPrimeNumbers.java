@@ -1,4 +1,4 @@
-package ru.job4j.prime;
+package ru.job4j.iterator.prime;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
