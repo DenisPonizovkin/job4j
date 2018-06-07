@@ -26,7 +26,15 @@ public class IteratorArrayEvenNumbers implements Iterator {
 
     @Override
     public boolean hasNext() {
-        return evenNumberId() != -1;
+        boolean has = false;
+        for (; index < array.length; index++) {
+            if (isEvenNumber(array[index])) {
+                has = true;
+                break;
+            }
+        }
+        return has;
+
     }
 
     @Override
@@ -34,14 +42,7 @@ public class IteratorArrayEvenNumbers implements Iterator {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        for (; index < array.length; index++) {
-            if (isEvenNumber(array[index])) {
-                int elem = array[index];
-                ++index;
-                return elem;
-            }
-        }
-        throw new NoSuchElementException();
+        return array[index++];
     }
 
     /**
