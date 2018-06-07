@@ -26,7 +26,7 @@ public class SimpleArray<T> implements Iterable<T> {
 
         @Override
         public boolean hasNext() {
-            return getSize() < capacity();
+            return currentPosition < array.getSize();
         }
 
         @Override
@@ -43,7 +43,7 @@ public class SimpleArray<T> implements Iterable<T> {
      * @return - number of elements.
      */
     public int getSize() {
-       return currentPosition;
+        return currentPosition;
     }
 
     /**
@@ -67,8 +67,8 @@ public class SimpleArray<T> implements Iterable<T> {
      * @param e - new element.
      */
     public void add(T e) {
-        if (currentPosition == data.length - 1) {
-           throw new ArrayStoreException();
+        if (currentPosition == data.length) {
+            throw new ArrayStoreException();
         }
         data[currentPosition++] = e;
     }
@@ -79,7 +79,7 @@ public class SimpleArray<T> implements Iterable<T> {
      * @param e - element.
      */
     public void set(int index, T e) {
-        if (index > currentPosition) {
+        if (index > currentPosition - 1) {
             throw new IndexOutOfBoundsException();
         }
         data[index] = e;
@@ -90,10 +90,10 @@ public class SimpleArray<T> implements Iterable<T> {
      * @param index - index of element.
      */
     public void delete(int index) {
-        if (index > currentPosition) {
+        if (index > currentPosition - 1) {
             throw new IndexOutOfBoundsException();
         }
-        if (index < currentPosition) {
+        if (index < currentPosition - 1) {
             for (int i = index + 1; i < currentPosition; i++) {
                 data[i - 1] = data[i];
             }
@@ -108,7 +108,7 @@ public class SimpleArray<T> implements Iterable<T> {
      */
     T get(int index) {
         if (index > currentPosition) {
-           throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException();
         }
         return (T) data[index];
     }
@@ -117,4 +117,12 @@ public class SimpleArray<T> implements Iterable<T> {
     public Iterator<T> iterator() {
         return new SimpleArrayIterator<T>(this);
     }
+
+    public void print() {
+        for (Iterator<T> it = iterator(); it.hasNext();) {
+            T e = it.next();
+            System.out.println("" + e);
+        }
+    }
 }
+
