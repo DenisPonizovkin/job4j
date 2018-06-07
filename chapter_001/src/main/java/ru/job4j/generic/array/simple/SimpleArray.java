@@ -87,7 +87,6 @@ public class SimpleArray<T> implements Iterable<T> {
 
     /**
      * Delete element at index place.
-     * @param index - index of element.
      */
     public void delete(int index) {
         if (index > currentPosition - 1) {
@@ -106,7 +105,7 @@ public class SimpleArray<T> implements Iterable<T> {
      * @param index - index of element.
      * @return element.
      */
-    T get(int index) {
+    public T get(int index) {
         if (index > currentPosition) {
             throw new IndexOutOfBoundsException();
         }
