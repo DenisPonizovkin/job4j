@@ -13,35 +13,30 @@ public class IteratorArray2D implements Iterator {
      */
     private int[][] array;
     /**
-     * Current column index.
-     */
-    private int indexColumn = 0;
-    /**
      * Current row index.
      */
     private int indexRow = 0;
     /**
-     * Number of all elements of array.
+     * Current column index.
      */
-    private int numberOfElements;
-    /**
-     * Current number of elements. It used in hasNext() method.
-     */
-    private int currentNumber = 0;
+    private int indexColumn = 0;
 
     public IteratorArray2D(final int[][] array) {
         this.array = array;
-        for (int i = 0; i < array.length; i++) {
-            for (int j = 0; j < array[i].length; j++) {
-                numberOfElements++;
-            }
-        }
     }
 
     @Override
     public boolean hasNext() {
-        boolean is = currentNumber < numberOfElements;
-        return is;
+        boolean has = true;
+        if (array.length == 0) {
+            has = false;
+        }
+        if (indexRow == array.length - 1) {
+            if (indexColumn == array[indexRow].length) {
+               has = false;
+            }
+        }
+        return has;
     }
 
     @Override
@@ -49,15 +44,16 @@ public class IteratorArray2D implements Iterator {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        currentNumber++;
-        int element = array[indexColumn][indexRow];
-        if (indexRow == array[indexColumn].length - 1) {
-            indexColumn++;
-            if (hasNext()) {
-                indexRow = 0;
+        int element = array[indexRow][indexColumn];
+        if (indexColumn == array[indexRow].length - 1) {
+            if (indexRow < array.length - 1) {
+                indexRow++;
+                indexColumn = 0;
+            } else {
+                indexColumn++;
             }
         } else {
-            indexRow++;
+            indexColumn++;
         }
         return element;
     }
