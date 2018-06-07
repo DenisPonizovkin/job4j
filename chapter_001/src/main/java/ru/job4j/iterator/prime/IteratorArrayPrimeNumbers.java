@@ -26,7 +26,14 @@ public class IteratorArrayPrimeNumbers implements Iterator {
 
     @Override
     public boolean hasNext() {
-        return primeNumberId() != -1;
+        boolean has = false;
+        for (; index < array.length; index++) {
+            if (isPrimeNumber(array[index])) {
+                has = true;
+                break;
+            }
+        }
+        return has;
     }
 
     @Override
@@ -34,14 +41,7 @@ public class IteratorArrayPrimeNumbers implements Iterator {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        for (; index < array.length; index++) {
-            if (isPrimeNumber(array[index])) {
-                int elem = array[index];
-                ++index;
-                return elem;
-            }
-        }
-        throw new NoSuchElementException();
+        return array[index++];
     }
 
     /**
