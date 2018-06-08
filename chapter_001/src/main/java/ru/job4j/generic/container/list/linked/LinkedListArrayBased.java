@@ -63,10 +63,27 @@ public class LinkedListArrayBased<E> implements Iterable<E> {
      */
     public E get(int index) {
         int i = 0;
-        for (Node<E> start = first; start != null;) {
-           if (i == index) {
+        for (Node<E> start = first; start != null; start = start.next) {
+           if (i++ == index) {
               return start.data;
            }
+        }
+        throw new NoSuchElementException();
+    }
+
+    /**
+     * Remove element in index position.
+     * @param index - position.
+     */
+    public void remove(int index) {
+        int i = 0;
+        Node<E> prev = null;
+        for (Node<E> start = first; start != null; start = start.next) {
+            if (i++ == index) {
+                prev.next = start.next;
+                return;
+            }
+            prev = start;
         }
         throw new NoSuchElementException();
     }

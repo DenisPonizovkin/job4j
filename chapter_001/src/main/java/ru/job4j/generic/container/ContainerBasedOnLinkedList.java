@@ -32,6 +32,14 @@ public class ContainerBasedOnLinkedList<E> implements Iterable<E> {
         return list.get(index);
     }
 
+    /**
+     * Remove element in index position.
+     * @param index - position.
+     */
+    public void remove(int index) {
+        list.remove(index);
+    }
+
     @Override
     public Iterator<E> iterator() {
         return list.iterator();
