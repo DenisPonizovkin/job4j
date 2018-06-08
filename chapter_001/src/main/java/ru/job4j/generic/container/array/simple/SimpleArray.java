@@ -1,10 +1,10 @@
-package ru.job4j.generic.array.simple;
+package ru.job4j.generic.container.array.simple;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Generic wrapper for array.
+ * Generic wrapper for container.
  */
 public class SimpleArray<T> implements Iterable<T> {
 
@@ -19,14 +19,14 @@ public class SimpleArray<T> implements Iterable<T> {
 
     /**
      * Constructor.
-     * @param n - number of elements in array (data member);
+     * @param n - number of elements in container (data member);
      */
     public SimpleArray(int n) {
         data = new Object[n];
     }
 
     /**
-     * Add element in array.
+     * Add element in container.
      * @param e - new element.
      */
     public void add(T e) {
@@ -37,7 +37,7 @@ public class SimpleArray<T> implements Iterable<T> {
     }
 
     /**
-     * Number of elements in array.
+     * Number of elements in container.
      * @return - number of elements.
      */
     public int getSize() {
@@ -54,7 +54,7 @@ public class SimpleArray<T> implements Iterable<T> {
 
     /**
      * Set element in [index] place.
-     * @param index - index of element ini array.
+     * @param index - index of element ini container.
      * @param e - element.
      */
     public void set(int index, T e) {
@@ -80,7 +80,7 @@ public class SimpleArray<T> implements Iterable<T> {
     }
 
     /**
-     * Get element from array at index position.
+     * Get element from container at index position.
      * @param index - index of element.
      * @return element.
      */
@@ -97,7 +97,7 @@ public class SimpleArray<T> implements Iterable<T> {
     }
 
     /**
-     * Simple array iterator.
+     * Simple container iterator.
      * @param <T>
      */
     class SimpleArrayIterator<T> implements Iterator<T> {

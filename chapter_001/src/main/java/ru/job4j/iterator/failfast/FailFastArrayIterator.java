@@ -1,13 +1,13 @@
 package ru.job4j.iterator.failfast;
 
-import ru.job4j.generic.array.dynamic.DynamicArray;
+import ru.job4j.generic.container.array.dynamic.DynamicArray;
 
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Fail-fast iterator for dynamic array.
+ * Fail-fast iterator for dynamic container.
  */
 public class FailFastArrayIterator<E> implements Iterator {
 

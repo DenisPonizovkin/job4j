@@ -1,13 +1,12 @@
-package ru.job4j.generic.array.dynamic;
+package ru.job4j.generic.container.array.dynamic;
 
-import ru.job4j.generic.array.simple.SimpleArray;
 import ru.job4j.iterator.failfast.FailFastArrayIterator;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Dynamic array.
+ * Dynamic container.
  *
  * @author Ponizovkin Denis.
  */

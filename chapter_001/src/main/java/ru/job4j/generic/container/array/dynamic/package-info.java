@@ -1,9 +1,9 @@
 /**
- * Package for dynamic array.
+ * Package for dynamic container.
  *
  * @author Denis Ponizovkin (mailto: denis.ponizovkin@gmail.com)
  * @version $Id$
  * @since 0.1
  */
 
-package ru.job4j.generic.array.dynamic;
+package ru.job4j.generic.container.array.dynamic;
