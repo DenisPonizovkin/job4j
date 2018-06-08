@@ -11,8 +11,8 @@ public class ContainerBasedOnLinkedList<E> implements Iterable<E> {
 
     private LinkedListArrayBased<E> list;
 
-    public ContainerBasedOnLinkedList(LinkedListArrayBased<E> list) {
-        this.list = list;
+    public ContainerBasedOnLinkedList() {
+        this.list = new LinkedListArrayBased<E>();
     }
 
     /**
