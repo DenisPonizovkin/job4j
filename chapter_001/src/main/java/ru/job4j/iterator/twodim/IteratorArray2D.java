@@ -27,16 +27,7 @@ public class IteratorArray2D implements Iterator {
 
     @Override
     public boolean hasNext() {
-        boolean has = true;
-        if (array.length == 0) {
-            has = false;
-        }
-        if (indexRow == array.length - 1) {
-            if (indexColumn == array[indexRow].length) {
-               has = false;
-            }
-        }
-        return has;
+        return indexRow < array.length;
     }
 
     @Override
@@ -46,12 +37,8 @@ public class IteratorArray2D implements Iterator {
         }
         int element = array[indexRow][indexColumn];
         if (indexColumn == array[indexRow].length - 1) {
-            if (indexRow < array.length - 1) {
-                indexRow++;
-                indexColumn = 0;
-            } else {
-                indexColumn++;
-            }
+            indexRow++;
+            indexColumn = 0;
         } else {
             indexColumn++;
         }
