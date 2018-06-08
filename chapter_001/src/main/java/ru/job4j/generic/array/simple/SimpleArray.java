@@ -8,51 +8,14 @@ import java.util.NoSuchElementException;
  */
 public class SimpleArray<T> implements Iterable<T> {
 
+    /**
+     * Storing data.
+     */
     private Object[] data;
-    int currentPosition = 0;
-
     /**
-     * Simple array iterator.
-     * @param <T>
+     * Current index position.
      */
-    class SimpleArrayIterator<T> implements Iterator<T> {
-
-        SimpleArray<T> array;
-        int currentPosition = 0;
-
-        SimpleArrayIterator(SimpleArray<T> array) {
-            this.array = array;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return currentPosition < array.getSize();
-        }
-
-        @Override
-        public T next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException();
-            }
-            return array.get(currentPosition++);
-        }
-    }
-
-    /**
-     * Number of elements in array.
-     * @return - number of elements.
-     */
-    public int getSize() {
-        return currentPosition;
-    }
-
-    /**
-     * Reserved size.
-     * @return - reserved size.
-     */
-    public int capacity() {
-        return data.length;
-    }
+    private int cursor = 0;
 
     /**
      * Constructor.
@@ -67,10 +30,26 @@ public class SimpleArray<T> implements Iterable<T> {
      * @param e - new element.
      */
     public void add(T e) {
-        if (currentPosition == data.length) {
+        if (cursor == data.length) {
             throw new ArrayStoreException();
         }
-        data[currentPosition++] = e;
+        data[cursor++] = e;
+    }
+
+    /**
+     * Number of elements in array.
+     * @return - number of elements.
+     */
+    public int getSize() {
+        return cursor;
+    }
+
+    /**
+     * Reserved size.
+     * @return - reserved size.
+     */
+    public int capacity() {
+        return data.length;
     }
 
     /**
@@ -79,7 +58,7 @@ public class SimpleArray<T> implements Iterable<T> {
      * @param e - element.
      */
     public void set(int index, T e) {
-        if (index > currentPosition - 1) {
+        if (index > cursor - 1) {
             throw new IndexOutOfBoundsException();
         }
         data[index] = e;
@@ -89,15 +68,15 @@ public class SimpleArray<T> implements Iterable<T> {
      * Delete element at index place.
      */
     public void delete(int index) {
-        if (index > currentPosition - 1) {
+        if (index > cursor - 1) {
             throw new IndexOutOfBoundsException();
         }
-        if (index < currentPosition - 1) {
-            for (int i = index + 1; i < currentPosition; i++) {
+        if (index < cursor - 1) {
+            for (int i = index + 1; i < cursor; i++) {
                 data[i - 1] = data[i];
             }
         }
-        currentPosition--;
+        cursor--;
     }
 
     /**
@@ -106,7 +85,7 @@ public class SimpleArray<T> implements Iterable<T> {
      * @return element.
      */
     public T get(int index) {
-        if (index > currentPosition) {
+        if (index > cursor) {
             throw new IndexOutOfBoundsException();
         }
         return (T) data[index];
@@ -117,11 +96,32 @@ public class SimpleArray<T> implements Iterable<T> {
         return new SimpleArrayIterator<T>(this);
     }
 
-    public void print() {
-        for (Iterator<T> it = iterator(); it.hasNext();) {
-            T e = it.next();
-            System.out.println("" + e);
+    /**
+     * Simple array iterator.
+     * @param <T>
+     */
+    class SimpleArrayIterator<T> implements Iterator<T> {
+
+        SimpleArray<T> array;
+        int cursor = 0;
+
+        SimpleArrayIterator(SimpleArray<T> array) {
+            this.array = array;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return cursor < array.getSize();
+        }
+
+        @Override
+        public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            return array.get(cursor++);
         }
     }
+
 }
 
