@@ -16,7 +16,7 @@ public class IteratorArrayPrimeNumbers implements Iterator {
      */
     private int index = 0;
     /**
-     * If there is no prime number in array then isPrimeNumber() method return this value.
+     * If there is no prime number in container then isPrimeNumber() method return this value.
      */
     private final int noPrimeNumberId = -1;
 

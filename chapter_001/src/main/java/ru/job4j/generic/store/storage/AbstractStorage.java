@@ -1,6 +1,6 @@
 package ru.job4j.generic.store.storage;
 
-import ru.job4j.generic.array.simple.SimpleArray;
+import ru.job4j.generic.container.array.simple.SimpleArray;
 import ru.job4j.generic.store.model.Base;
 
 import java.util.Iterator;

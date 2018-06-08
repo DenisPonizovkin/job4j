@@ -1,5 +1,5 @@
 /**
- * Package for simple array list.
+ * Package for simple container list.
  *
  * @author Denis Ponizovkin (mailto: denis.ponizovkin@gmail.com)
  * @version $Id$

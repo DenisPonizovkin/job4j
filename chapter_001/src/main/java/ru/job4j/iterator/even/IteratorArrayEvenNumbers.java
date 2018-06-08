@@ -16,7 +16,7 @@ public class IteratorArrayEvenNumbers implements Iterator {
      */
     private int index = 0;
     /**
-     * If there is no even number in array then isEvenNumber() method return this value.
+     * If there is no even number in container then isEvenNumber() method return this value.
      */
     private final int noEvenNumberId = -1;
 
