@@ -33,6 +33,14 @@ public class ContainerBasedOnLinkedList<E> implements Iterable<E> {
     }
 
     /**
+     * Get last element.
+     * @return - last element.
+     */
+    public E getLast() {
+        return list.getLast();
+    }
+
+    /**
      * Remove element in index position.
      * @param index - position.
      */
@@ -43,5 +51,17 @@ public class ContainerBasedOnLinkedList<E> implements Iterable<E> {
     @Override
     public Iterator<E> iterator() {
         return list.iterator();
+    }
+
+    public void removeLast() {
+        list.removeLast();
+    }
+
+    public void addLast(E value) {
+        list.add(value);
+    }
+
+    public void removeFirst() {
+        list.removeFirst();
     }
 }

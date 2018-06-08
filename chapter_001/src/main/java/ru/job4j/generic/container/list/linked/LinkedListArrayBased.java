@@ -94,6 +94,33 @@ public class LinkedListArrayBased<E> implements Iterable<E> {
     }
 
     /**
+     * Return data of last element.
+     * @return - data of last element.
+     */
+    public E getLast() {
+        return last.data;
+    }
+
+    /**
+     * Remove last element.
+     */
+    public void removeLast() {
+        Node<E> start = first;
+        while (start.next != last) {
+            start = start.next;
+        }
+        last = start;
+        last.next = null;
+    }
+
+    /**
+     * Remove first element.
+     */
+    public void removeFirst() {
+        first = first.next;
+    }
+
+    /**
      * Node of linked list.
      * @param <E> - type of node data.
      */
