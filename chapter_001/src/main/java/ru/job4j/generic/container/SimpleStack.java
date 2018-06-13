@@ -7,14 +7,7 @@ package ru.job4j.generic.container;
  */
 public class SimpleStack<E> {
 
-    private ContainerBasedOnLinkedList<E> data;
-
-    /**
-     * Constructor.
-     */
-    public SimpleStack() {
-        data = new ContainerBasedOnLinkedList<E>();
-    }
+    private ContainerBasedOnLinkedList<E> data = new ContainerBasedOnLinkedList<E>();
 
     /**
      * Poll last element from stack.
