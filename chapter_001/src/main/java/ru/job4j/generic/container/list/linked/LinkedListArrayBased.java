@@ -9,19 +9,16 @@ import java.util.NoSuchElementException;
  * Linked list based on array.
  */
 public class LinkedListArrayBased<E> implements Iterable<E> {
-
-    /**
-     * Storing data;
-     */
-    private DynamicArray<E> data;
     /**
      * First element.
      */
-    Node<E> first = null;
+    private BiDirectionalNode<E> first = null;
+
     /**
      * Last element.
      */
-    Node<E> last = null;
+    private BiDirectionalNode<E> last = null;
+
 
     /**
      * Add element.
@@ -29,31 +26,17 @@ public class LinkedListArrayBased<E> implements Iterable<E> {
      */
     public void add(E value) {
         if (first == null) {
-            Node<E> node = new Node<E>(value, null, null);
+            BiDirectionalNode<E> node = new BiDirectionalNode<E>(value, null, null);
             first = node;
-            return;
-        }
-        if (first.next == null) {
-            Node<E> node = new Node<E>(value, first, null);
+        } else if (first.next == null) {
+            BiDirectionalNode<E> node = new BiDirectionalNode<E>(value, first, null);
             last = node;
             first.next = last;
-            return;
+        } else {
+            BiDirectionalNode<E> node = new BiDirectionalNode<E>(value, last, null);
+            last.next = node;
+            last = node;
         }
-        Node<E> node = new Node<E>(value, last, null);
-        last.next = node;
-        last = node;
-    }
-
-    /**
-     * Print data.
-     */
-    public void print() {
-        System.out.println("LL: ");
-        for (Node<E> start = first; start != null;) {
-           System.out.print(start.data + " ");
-           start = start.next;
-        }
-        System.out.print("\n");
     }
 
     /**
@@ -63,7 +46,7 @@ public class LinkedListArrayBased<E> implements Iterable<E> {
      */
     public E get(int index) {
         int i = 0;
-        for (Node<E> start = first; start != null; start = start.next) {
+        for (BiDirectionalNode<E> start = first; start != null; start = start.next) {
            if (i++ == index) {
               return start.data;
            }
@@ -77,8 +60,8 @@ public class LinkedListArrayBased<E> implements Iterable<E> {
      */
     public void remove(int index) {
         int i = 0;
-        Node<E> prev = null;
-        for (Node<E> start = first; start != null; start = start.next) {
+        BiDirectionalNode<E> prev = null;
+        for (BiDirectionalNode<E> start = first; start != null; start = start.next) {
             if (i++ == index) {
                 prev.next = start.next;
                 return;
@@ -90,7 +73,7 @@ public class LinkedListArrayBased<E> implements Iterable<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return data.iterator();
+        return new FailFastIterator(first, last);
     }
 
     /**
@@ -105,7 +88,7 @@ public class LinkedListArrayBased<E> implements Iterable<E> {
      * Remove last element.
      */
     public void removeLast() {
-        Node<E> start = first;
+        BiDirectionalNode<E> start = first;
         while (start.next != last) {
             start = start.next;
         }
@@ -120,20 +103,20 @@ public class LinkedListArrayBased<E> implements Iterable<E> {
         first = first.next;
     }
 
-    /**
-     * Node of linked list.
-     * @param <E> - type of node data.
-     */
-    class Node<E> {
-        E data;
-        public Node<E> prev;
-        public Node<E> next;
-
-        Node(E data, Node<E> prev, Node<E> next) {
-           this.data = data;
-           this.prev = prev;
-           this.next = next;
+    @Override
+    public String toString() {
+        String out = "LinkedListArrayBased{\n";
+        Integer i = 0;
+        for (Iterator it = iterator(); it.hasNext();) {
+        //for (BiDirectionalNode<E> start = first; start != null; start = start.next) {
+            out += "data[" + (i++) + "] = " + it.next() + "\n";
         }
+        out += "}";
+        return out;
+    }
+
+    public void print() {
+        System.out.println(this.toString());
     }
 }
 
