@@ -43,7 +43,14 @@ public class User {
     }
 
     @Override
-    public boolean equals(User u) {
+    public int hashCode() {
+        int hash = 0;
+        hash += name.isEmpty() ? 0 : name.hashCode();
+        hash += children;
+        hash += birthday == null ? 0 : birthday.hashCode();
+        return hash;
+    }
+
     @Override
     public boolean equals(Object o) {
         User u = (User) o;
