@@ -19,7 +19,7 @@ public class SimpleSetBasedOnLinkedList<E> implements Iterable<E> {
      */
     void add(E e) {
         boolean is = false;
-        for (Iterator it = data.iterator(); it.hasNext()) {
+        for (Iterator it = data.iterator(); it.hasNext();) {
             if (it.next().equals(e)) {
                is = true;
             }
