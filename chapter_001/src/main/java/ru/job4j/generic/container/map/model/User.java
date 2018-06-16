@@ -43,6 +43,19 @@ public class User {
     }
 
     @Override
+    public int hashCode() {
+        int hash = 0;
+        if (name != null) {
+            hash += name.hashCode();
+        }
+        if (birthday != null) {
+            hash += birthday.hashCode();
+        }
+        hash += children;
+        return hash;
+    }
+
+    @Override
     public String toString() {
         return "User{" + "name='" + name + '\''
                 + ", children=" + children
