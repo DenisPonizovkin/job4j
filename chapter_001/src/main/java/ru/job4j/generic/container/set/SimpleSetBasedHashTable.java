@@ -71,7 +71,7 @@ public class SimpleSetBasedHashTable<E> implements Iterable<E> {
      * @return - id.
      */
     private int getId(E e) {
-       return e.hashCode();
+       return e.hashCode() % maxNumber;
     }
 
     @Override
