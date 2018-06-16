@@ -47,9 +47,15 @@ public class User {
     @Override
     public boolean equals(Object o) {
         User u = (User) o;
-        return  this.name.equals(u.getName())
-                && (this.getChildren() == u.getChildren())
-                && (this.birthday == u.getBirthday());
+        boolean eq = false;
+        if (this == u) {
+           eq = true;
+        } else {
+            eq = this.name.equals(u.getName())
+                    && (this.getChildren() == u.getChildren())
+                    && (this.birthday == u.getBirthday());
+        }
+        return eq;
     }
 
     @Override
