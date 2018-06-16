@@ -88,4 +88,11 @@ public class DynamicArray<E> implements Iterable<E> {
     public Iterator<E> iterator() {
         return new FailFastArrayIterator<E>(this, modCount);
     }
+
+    public void remove(int id) {
+        --size;
+        for (int i = id; i < size; i++) {
+           data[i] = data[i + 1];
+        }
+    }
 }
