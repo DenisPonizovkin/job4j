@@ -43,16 +43,10 @@ public class User {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 0;
-        if (name != null) {
-            hash += name.hashCode();
-        }
-        if (birthday != null) {
-            hash += birthday.hashCode();
-        }
-        hash += children;
-        return hash;
+    public boolean equals(User u) {
+        return  this.name.equals(u.getName())
+                && (this.getChildren() == u.getChildren())
+                && (this.birthday == u.getBirthday());
     }
 
     @Override
