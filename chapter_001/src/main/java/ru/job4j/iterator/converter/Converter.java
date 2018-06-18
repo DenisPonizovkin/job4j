@@ -12,31 +12,33 @@ import java.util.NoSuchElementException;
  */
 public class Converter {
 
-    private Iterator<Integer> embedIt = null;
+    private Iterator<Integer> current = null;
 
     public Iterator<Integer> convert(Iterator<Iterator<Integer>> it) {
         return new Iterator<Integer>() {
             @Override
             public boolean hasNext() {
-                if ((embedIt == null) || (!embedIt.hasNext())) {
-                    while (it.hasNext()) {
-                        embedIt = it.next();
-                        if (embedIt != null) {
-                           if (embedIt.hasNext()) {
-                               return true;
-                           }
-                        }
-                    }
-                    return false;
+                if (current == null) {
+                   current = it.next();
                 }
-                return true;
+                boolean has = current.hasNext();
+                if (!current.hasNext()) {
+                    while (it.hasNext()) {
+                        if (current.hasNext()) {
+                            has = true;
+                            break;
+                        }
+                        current = it.next();
+                    }
+                }
+                return has;
             }
             @Override
             public Integer next() {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                return embedIt.next();
+                return current.next();
             }
         };
     }
