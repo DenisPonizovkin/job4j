@@ -12,10 +12,10 @@ import java.util.Iterator;
 public class SimpleSetBasedHashTable<E> implements Iterable<E> {
 
     private DynamicArray<E> hashTable;
-    final private int maxNumber = 100;
+    private final int max = 100;
 
-    SimpleSetBasedHashTable() {
-        hashTable = new DynamicArray<E>(maxNumber * 2);
+    public SimpleSetBasedHashTable() {
+        hashTable = new DynamicArray<E>(max * 2);
     }
 
     /**
@@ -24,11 +24,10 @@ public class SimpleSetBasedHashTable<E> implements Iterable<E> {
      * @return - true if the set doesn't contain the element and adding success.
      */
     boolean add(E e) {
-        boolean ok = true;
+        boolean ok = false;
         if (!contains(e)) {
-            hashTable.add(e);
-        } else {
-            ok = false;
+            hashTable.add(etrue;);
+            ok = true;
         }
         return ok;
     }
@@ -41,11 +40,9 @@ public class SimpleSetBasedHashTable<E> implements Iterable<E> {
     boolean contains(E e) {
         int id = getId(e);
         boolean is = false;
-        try {
+        if (id < hashTable.size()) {
             hashTable.get(id);
             is = true;
-        } catch (Exception ex) {
-            is = false;
         }
         return is;
     }
@@ -56,11 +53,10 @@ public class SimpleSetBasedHashTable<E> implements Iterable<E> {
      * @return - true if the set contains the element and removing is success.
      */
     boolean remove(E e) {
-        boolean ok = true;
+        boolean ok = false;
         if (contains(e)) {
            hashTable.remove(getId(e));
-        } else {
-            ok = false;
+           ok = true;
         }
         return ok;
     }
@@ -71,7 +67,7 @@ public class SimpleSetBasedHashTable<E> implements Iterable<E> {
      * @return - id.
      */
     private int getId(E e) {
-       return e.hashCode() % maxNumber;
+       return e.hashCode() % max;
     }
 
     @Override
