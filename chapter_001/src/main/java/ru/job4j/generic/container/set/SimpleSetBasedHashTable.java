@@ -26,8 +26,7 @@ public class SimpleSetBasedHashTable<E> implements Iterable<E> {
     boolean add(E e) {
         boolean ok = false;
         if (!contains(e)) {
-            hashTable.add(etrue;);
-            ok = true;
+            hashTable.add(e);
         }
         return ok;
     }
