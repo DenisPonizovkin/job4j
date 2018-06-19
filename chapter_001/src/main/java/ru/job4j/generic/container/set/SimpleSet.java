@@ -15,10 +15,17 @@ public class SimpleSet<E> implements Iterable<E> {
     private SimpleArrayList<E> data;
 
     /**
+     * Contstructor.
+     */
+    public SimpleSet() {
+        this.data = new SimpleArrayList<E>();
+    }
+
+    /**
      * Add an element to the set.
      * @param e
      */
-    void add(E e) {
+    public void add(E e) {
         boolean is = false;
         for (Integer i = 0; i < data.getSize(); i++) {
            if (data.get(i).equals(e)) {
@@ -29,6 +36,14 @@ public class SimpleSet<E> implements Iterable<E> {
         if (!is) {
             data.add(e);
         }
+    }
+
+    /**
+     * Size of the data.
+     * @return size of the data.
+     */
+    public int size() {
+        return data.getSize();
     }
 
     @Override
