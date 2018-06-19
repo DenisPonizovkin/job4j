@@ -22,13 +22,13 @@ public class Converter {
                    current = it.next();
                 }
                 boolean has = current.hasNext();
-                if (!current.hasNext()) {
+                if (!has) {
                     while (it.hasNext()) {
+                        current = it.next();
                         if (current.hasNext()) {
                             has = true;
                             break;
                         }
-                        current = it.next();
                     }
                 }
                 return has;
