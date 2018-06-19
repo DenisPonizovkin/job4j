@@ -14,6 +14,13 @@ public class SimpleSetBasedOnLinkedList<E> implements Iterable<E> {
     private LinkedListArrayBased<E> data;
 
     /**
+     * Constructor.
+     */
+    public SimpleSetBasedOnLinkedList() {
+        this.data = new LinkedListArrayBased<E>();
+    }
+
+    /**
      * Add an element to the set.
      * @param e
      */
