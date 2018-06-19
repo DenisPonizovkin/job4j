@@ -69,6 +69,22 @@ public class DynamicArray<E> implements Iterable<E> {
     }
 
     /**
+     * Is element in array.
+     * @param e
+     * @return
+     */
+    public boolean contains(E e) {
+        boolean is = false;
+        for (Iterator it = iterator(); it.hasNext();) {
+            if (it.next() == e) {
+                is = true;
+                break;
+            }
+        }
+        return is;
+    }
+
+    /**
      * Size of data.
      * @return - size.
      */
@@ -92,7 +108,11 @@ public class DynamicArray<E> implements Iterable<E> {
     public void remove(int id) {
         --size;
         for (int i = id; i < size; i++) {
-           data[i] = data[i + 1];
+            data[i] = data[i + 1];
         }
+    }
+
+    public void clear() {
+        size = 0;
     }
 }

@@ -14,8 +14,19 @@ public class SimpleSetBasedHashTable<E> implements Iterable<E> {
     private DynamicArray<E> hashTable;
     private final int max = 100;
 
+    /**
+     * Constructor.
+     */
     public SimpleSetBasedHashTable() {
         hashTable = new DynamicArray<E>(max * 2);
+    }
+
+    /**
+     * Get size of set.
+     * @return size.
+     */
+    public int size() {
+        return hashTable.size();
     }
 
     /**
@@ -24,9 +35,11 @@ public class SimpleSetBasedHashTable<E> implements Iterable<E> {
      * @return - true if the set doesn't contain the element and adding success.
      */
     boolean add(E e) {
-        boolean ok = false;
+        boolean ok = true;
         if (!contains(e)) {
             hashTable.add(e);
+        } else {
+            ok = false;
         }
         return ok;
     }
@@ -37,13 +50,7 @@ public class SimpleSetBasedHashTable<E> implements Iterable<E> {
      * @return - true if the set contains the element.
      */
     boolean contains(E e) {
-        int id = getId(e);
-        boolean is = false;
-        if (id < hashTable.size()) {
-            hashTable.get(id);
-            is = true;
-        }
-        return is;
+        return hashTable.contains(e);
     }
 
     /**
@@ -72,5 +79,9 @@ public class SimpleSetBasedHashTable<E> implements Iterable<E> {
     @Override
     public Iterator<E> iterator() {
         return null;
+    }
+
+    public void clear() {
+        hashTable.clear();
     }
 }
