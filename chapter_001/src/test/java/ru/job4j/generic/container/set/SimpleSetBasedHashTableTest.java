@@ -17,17 +17,16 @@ public class SimpleSetBasedHashTableTest {
     }
 
     @Test
-    public void whenAdd5ElementsSizeIs5() {
+    public void whenAddNElementsSizeIsN() {
 
         set.clear();
 
-        set.add(1);
-        set.add(2);
-        set.add(3);
-        set.add(4);
-        set.add(5);
+        int n = 0;
+        for (int i = 0; i < n; i++) {
+            set.add(i);
+        }
 
-        assertThat(set.size(), is(5));
+        assertThat(set.size(), is(n));
     }
 
     @Test

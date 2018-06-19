@@ -13,6 +13,7 @@ public class SimpleSetBasedHashTable<E> implements Iterable<E> {
 
     private DynamicArray<E> hashTable;
     private final int max = 100;
+    private final 
 
     /**
      * Constructor.
