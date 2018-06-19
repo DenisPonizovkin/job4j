@@ -76,7 +76,7 @@ public class DynamicArray<E> implements Iterable<E> {
     public boolean contains(E e) {
         boolean is = false;
         for (Iterator it = iterator(); it.hasNext();) {
-            if (it.next() == e) {
+            if (it.next().equals(e)) {
                 is = true;
                 break;
             }
@@ -114,5 +114,20 @@ public class DynamicArray<E> implements Iterable<E> {
 
     public void clear() {
         size = 0;
+    }
+
+    public int containerSize() {
+        return data.length;
+    }
+
+    public boolean isIdElement(int id) {
+        boolean is = false;
+        for (int i = 0; i < data.length; i++) {
+           if (data[i] != null) {
+               is = true;
+               break;
+           }
+        }
+        return is;
     }
 }
