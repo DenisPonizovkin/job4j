@@ -1,6 +1,7 @@
 package ru.job4j.generic.container.list.linked;
 
 import ru.job4j.generic.container.array.dynamic.DynamicArray;
+import ru.job4j.utils.Pair;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -117,6 +118,23 @@ public class LinkedListArrayBased<E> implements Iterable<E> {
 
     public void print() {
         System.out.println(this.toString());
+    }
+
+    public void remove(E e) {
+        BiDirectionalNode<E> cursor = first;
+        do {
+            if (e.equals(cursor.data)) {
+                BiDirectionalNode<E> next = cursor.next;
+                BiDirectionalNode<E> prev = cursor.prev;
+                if (next != null) {
+                    next.prev = prev;
+                }
+                if (prev != null) {
+                    prev.next = next;
+                }
+            }
+            cursor = cursor.next;
+        } while ((cursor != null) && (cursor.next != last));
     }
 }
 

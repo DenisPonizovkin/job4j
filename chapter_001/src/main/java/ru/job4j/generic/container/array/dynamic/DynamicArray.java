@@ -1,6 +1,8 @@
 package ru.job4j.generic.container.array.dynamic;
 
+import ru.job4j.generic.container.list.linked.LinkedListArrayBased;
 import ru.job4j.iterator.failfast.FailFastArrayIterator;
+import ru.job4j.utils.Pair;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -50,10 +52,7 @@ public class DynamicArray<E> implements Iterable<E> {
             data[size++] = e;
             return;
         }
-        Object[] tmp = new Object[data.length];
-        System.arraycopy(data, 0, tmp, 0, data.length);
-        data = new Object[data.length * 2];
-        System.arraycopy(data, 0, tmp, 0, tmp.length);
+        resize(data.length * 2);
     }
 
     /**
@@ -65,7 +64,7 @@ public class DynamicArray<E> implements Iterable<E> {
         if (index < size) {
             return (E) data[index];
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("No elements in " + index + " position");
     }
 
     /**
@@ -121,13 +120,23 @@ public class DynamicArray<E> implements Iterable<E> {
     }
 
     public boolean isIdElement(int id) {
-        boolean is = false;
-        for (int i = 0; i < data.length; i++) {
-           if (data[i] != null) {
-               is = true;
-               break;
-           }
+        return data[id] != null;
+    }
+
+    public void resize(int length) {
+        Object[] tmp = new Object[length];
+        System.arraycopy(data, 0, tmp, 0, data.length);
+        data = new Object[length];
+        System.arraycopy(tmp, 0, data, 0, tmp.length);
+    }
+
+    public void set(int i, E v) {
+        if (i >= data.length) {
+           throw new IndexOutOfBoundsException();
         }
-        return is;
+        if (data[i] == null) {
+            size++;
+        }
+        data[i] = v;
     }
 }
