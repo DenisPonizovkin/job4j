@@ -123,15 +123,27 @@ public class LinkedListArrayBased<E> implements Iterable<E> {
     public void remove(E e) {
         BiDirectionalNode<E> cursor = first;
         do {
+            if (cursor == null) {
+                break;
+            }
             if (e.equals(cursor.data)) {
                 BiDirectionalNode<E> next = cursor.next;
                 BiDirectionalNode<E> prev = cursor.prev;
-                if (next != null) {
-                    next.prev = prev;
+                if (prev == null) {
+                    first = next;
+                    if (first != null) {
+                        first.prev = null;
+                    }
+                    break;
                 }
-                if (prev != null) {
-                    prev.next = next;
+                if (next == null) {
+                    last = prev;
+                    last.next = null;
+                    break;
                 }
+                prev.next = next;
+                next.prev = prev;
+                break;
             }
             cursor = cursor.next;
         } while ((cursor != null) && (cursor.next != last));

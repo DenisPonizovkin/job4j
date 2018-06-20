@@ -2,6 +2,8 @@ package ru.job4j.generic.container;
 
 import org.junit.Test;
 
+import java.util.NoSuchElementException;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -25,16 +27,82 @@ public class HashTableTest {
         assertThat(table.get(5), is("v5"));
     }
 
+    @Test
+    public void whenRemoveValueByKeyWithCollisionsThenSizeDecrease() {
+        HashTable<SimpleHashCodeForTest, String> table = new HashTable<SimpleHashCodeForTest, String>();
+        SimpleHashCodeForTest k1 = new SimpleHashCodeForTest(1);
+        SimpleHashCodeForTest k2 = new SimpleHashCodeForTest(1);
+        SimpleHashCodeForTest k3 = new SimpleHashCodeForTest(1);
+        SimpleHashCodeForTest k4 = new SimpleHashCodeForTest(2);
+        SimpleHashCodeForTest k5 = new SimpleHashCodeForTest(2);
+        SimpleHashCodeForTest k6 = new SimpleHashCodeForTest(2);
+        SimpleHashCodeForTest k7 = new SimpleHashCodeForTest(2);
+
+        table.insert(k1, "v1");
+        table.insert(k2, "v2");
+        table.insert(k3, "v3");
+        table.insert(k4, "v4");
+        table.insert(k5, "v5");
+        table.insert(k6, "v6");
+        table.insert(k7, "v7");
+
+        int size = table.size();
+        table.delete(k4);
+        assertThat(table.size(), is(size - 1));
+    }
+
+    @Test
+    public void whenRemoveValueByKeyThenSizeDecrease() {
+        HashTable<Integer, String>  table = new HashTable<Integer, String>();
+        Integer i = 0;
+        table.insert(0, "v" + i++);
+        table.insert(1, "v" + i++);
+        table.insert(2, "v" + i++);
+        table.insert(3, "v" + i++);
+        table.insert(4, "v" + i++);
+        table.insert(5, "v" + i++);
+
+        int size = table.size();
+        table.delete(3);
+        assertThat(table.size(), is(size - 1));
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void whenRemoveValueByKeyWithCollisionsThenGetValueByKeyIsNull() {
+        HashTable<SimpleHashCodeForTest, String> table = new HashTable<SimpleHashCodeForTest, String>();
+        SimpleHashCodeForTest k1 = new SimpleHashCodeForTest(1);
+        SimpleHashCodeForTest k2 = new SimpleHashCodeForTest(1);
+        SimpleHashCodeForTest k3 = new SimpleHashCodeForTest(1);
+        SimpleHashCodeForTest k4 = new SimpleHashCodeForTest(2);
+        SimpleHashCodeForTest k5 = new SimpleHashCodeForTest(2);
+        SimpleHashCodeForTest k6 = new SimpleHashCodeForTest(2);
+        SimpleHashCodeForTest k7 = new SimpleHashCodeForTest(2);
+
+        table.insert(k1, "v1");
+        table.insert(k2, "v2");
+        table.insert(k3, "v3");
+        table.insert(k4, "v4");
+        table.insert(k5, "v5");
+        table.insert(k6, "v6");
+        table.insert(k7, "v7");
+
+        table.delete(k4);
+        table.get(k4);
+    }
+
     @Test(expected = NoSuchElementException.class)
     public void whenRemoveValueByKeyThenGetValueByKeyIsNull() {
         HashTable<Integer, String>  table = new HashTable<Integer, String>();
         Integer i = 0;
-        table.insert(i, "v" + i++);
-        table.insert(i, "v" + i++);
-        assertThat(table.get(0), is("v0"));
-        assertThat(table.get(1), is("v1"));
-        table.delete(0);
-        table.get(0);
+        table.insert(0, "v" + i++);
+        table.insert(1, "v" + i++);
+        table.insert(2, "v" + i++);
+        table.insert(3, "v" + i++);
+        table.insert(4, "v" + i++);
+        table.insert(5, "v" + i++);
+
+        table.delete(3);
+        table.get(3);
     }
 
     @Test
