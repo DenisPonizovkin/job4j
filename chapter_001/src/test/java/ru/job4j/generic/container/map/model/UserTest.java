@@ -30,4 +30,3 @@ public class UserTest {
         assertThat(u.hashCode(), is(u.hashCode()));
     }
 }
-}

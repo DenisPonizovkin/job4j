@@ -7,13 +7,20 @@ public class User {
     private String name;
     private int children;
     private Calendar birthday;
-    private long card;
+    private long card = 0;
     private final int base = 17;
+
+    public User(String name, int children, Calendar birthday) {
+        this.name = name;
+        this.children = children;
+        this.birthday = birthday;
+    }
 
     public User(String name, int children, Calendar birthday, long card) {
         this.name = name;
         this.children = children;
         this.birthday = birthday;
+        this.card = card;
     }
 
     public String getName() {
@@ -52,7 +59,7 @@ public class User {
         hash += birthday == null ? 0 : birthday.hashCode();
         hash += (int) (card ^ (card >>> 32));
 
-        return 31*base + hash;
+        return 31 * base + hash;
     }
 
     @Override
