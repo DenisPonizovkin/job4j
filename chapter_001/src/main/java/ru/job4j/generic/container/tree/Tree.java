@@ -58,20 +58,29 @@ public class Tree<E extends Comparable<E>> implements SimpleTree<E> {
             nodes.offer(root);
         }
 
+        private void addChilds(Node<E> node) {
+            for (Node<E> child : node.leaves()) {
+                nodes.offer(child);
+            }
+        }
+
         @Override
         public boolean hasNext() {
             if (nodes.size() == 1) {
                Node<E> el = nodes.poll();
-               for (Node<E> child : el.leaves()) {
-                   nodes.offer(child);
-               }
+               addChilds(el);
             }
             return nodes.size() > 0;
         }
 
         @Override
         public E next() {
-            return null;
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            Node<E> node = nodes.poll();
+            addChilds(node);
+            return node.value();
         }
     }
 
