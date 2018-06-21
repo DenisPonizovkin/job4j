@@ -34,4 +34,49 @@ public class TreeTest {
                 is(false)
         );
     }
+
+    @Test
+    public void whenTreeIsBinThenIsBinMethodReturnTrue() {
+        Tree<String> tree = new Tree<>("a");
+        tree.add("a", "ab");
+        tree.add("a", "ac");
+        tree.add("ab", "abc");
+        tree.add("ab", "abd");
+        tree.add("abc", "abcd");
+        tree.add("abc", "abce");
+        tree.add("abd", "abcf");
+        tree.add("abd", "abcg");
+        tree.add("abcd", "1");
+        tree.add("abcd", "2");
+        tree.add("abce", "3");
+        tree.add("abce", "4");
+        tree.add("abcf", "5");
+        tree.add("abcf", "6");
+        tree.add("abcg", "7");
+        tree.add("abcg", "8");
+        assertThat(tree.isBinary(), is(true));
+    }
+
+
+    @Test
+    public void whenTreeIsNotBinThenIsBinMethodReturnFalse() {
+        Tree<String> tree = new Tree<>("a");
+        tree.add("a", "ab");
+        tree.add("a", "ac");
+        tree.add("ab", "abc");
+        tree.add("ab", "abd");
+        tree.add("abc", "abcd");
+        tree.add("abc", "abce");
+        tree.add("abd", "abcf");
+        tree.add("abd", "abcg");
+        tree.add("abcd", "1");
+        tree.add("abcd", "2");
+        tree.add("abcd", "5");
+        tree.add("abcd", "6");
+        tree.add("abcd", "7");
+        tree.add("abcd", "8");
+        tree.add("abce", "3");
+        tree.add("abce", "4");
+        assertThat(tree.isBinary(), is(false));
+    }
 }

@@ -1,9 +1,6 @@
 package ru.job4j.generic.container.tree;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Optional;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * IMplementation of SimpleTree interface.
@@ -16,6 +13,22 @@ public class Tree<E extends Comparable<E>> implements SimpleTree<E> {
 
     public Tree(E v) {
         root = new Node<E>(v);
+    }
+
+    /**
+     * Check if the tree is binary.
+     * @return - true if the tree is binary.
+     */
+    public boolean isBinary() {
+        boolean bin = true;
+        for (Iterator it = iterator(); it.hasNext();) {
+            Optional<Node<E>> el = findBy((E) it.next());
+            if (el.get().leaves().size() > 2) {
+                bin = false;
+                break;
+            }
+        }
+        return bin;
     }
 
     @Override
