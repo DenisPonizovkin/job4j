@@ -7,8 +7,10 @@ public class User {
     private String name;
     private int children;
     private Calendar birthday;
+    private long card;
+    private final int base = 17;
 
-    public User(String name, int children, Calendar birthday) {
+    public User(String name, int children, Calendar birthday, long card) {
         this.name = name;
         this.children = children;
         this.birthday = birthday;
@@ -48,7 +50,9 @@ public class User {
         hash += name.isEmpty() ? 0 : name.hashCode();
         hash += children;
         hash += birthday == null ? 0 : birthday.hashCode();
-        return hash;
+        hash += (int) (card ^ (card >>> 32));
+
+        return 31*base + hash;
     }
 
     @Override
@@ -60,7 +64,8 @@ public class User {
         } else {
             eq = this.name.equals(u.getName())
                     && (this.getChildren() == u.getChildren())
-                    && (this.birthday == u.getBirthday());
+                    && (this.birthday == u.getBirthday()
+                    && (this.card == u.card));
         }
         return eq;
     }
@@ -70,5 +75,9 @@ public class User {
         return "User{" + "name='" + name + '\''
                 + ", children=" + children
                 + ", birthday=" + birthday + '}';
+    }
+
+    public long getCard() {
+        return card;
     }
 }
