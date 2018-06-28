@@ -12,15 +12,14 @@ import java.util.NoSuchElementException;
  */
 public class Converter {
 
-    private Iterator<Integer> current = null;
-
     public Iterator<Integer> convert(Iterator<Iterator<Integer>> it) {
         return new Iterator<Integer>() {
+
+            private Iterator<Integer> current = it.next();
+
             @Override
             public boolean hasNext() {
-                if (current == null) {
-                   current = it.next();
-                }
+
                 boolean has = current.hasNext();
                 if (!has) {
                     while (it.hasNext()) {
@@ -33,6 +32,7 @@ public class Converter {
                 }
                 return has;
             }
+
             @Override
             public Integer next() {
                 if (!hasNext()) {
