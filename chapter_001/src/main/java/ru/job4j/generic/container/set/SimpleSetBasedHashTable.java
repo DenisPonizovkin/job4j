@@ -35,11 +35,10 @@ public class SimpleSetBasedHashTable<E> implements Iterable<E> {
      * @return - true if the set doesn't contain the element and adding success.
      */
     boolean add(E e) {
-        boolean ok = true;
+        boolean ok = false;
         if (!contains(e)) {
             hashTable.add(e);
-        } else {
-            ok = false;
+            ok = true;
         }
         return ok;
     }

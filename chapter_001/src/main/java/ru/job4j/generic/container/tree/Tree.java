@@ -1,6 +1,11 @@
 package ru.job4j.generic.container.tree;
 
-import java.util.*;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Optional;
+import java.util.Queue;
+import java.util.NoSuchElementException;
 
 /**
  * IMplementation of SimpleTree interface.
