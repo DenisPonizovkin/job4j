@@ -29,13 +29,13 @@ public class LinkedListArrayBased<E> implements Iterable<E> {
         if (first == null) {
             BiDirectionalNode<E> node = new BiDirectionalNode<E>(value, null, null);
             first = node;
-        } else if (first.next == null) {
+        } else if (first.getNext() == null) {
             BiDirectionalNode<E> node = new BiDirectionalNode<E>(value, first, null);
             last = node;
-            first.next = last;
+            first.setNext(last);
         } else {
             BiDirectionalNode<E> node = new BiDirectionalNode<E>(value, last, null);
-            last.next = node;
+            last.setNext(node);
             last = node;
         }
     }
@@ -47,9 +47,9 @@ public class LinkedListArrayBased<E> implements Iterable<E> {
      */
     public E get(int index) {
         int i = 0;
-        for (BiDirectionalNode<E> start = first; start != null; start = start.next) {
+        for (BiDirectionalNode<E> start = first; start != null; start = start.getNext()) {
            if (i++ == index) {
-              return start.data;
+              return start.getData();
            }
         }
         throw new NoSuchElementException();
@@ -62,9 +62,9 @@ public class LinkedListArrayBased<E> implements Iterable<E> {
     public void remove(int index) {
         int i = 0;
         BiDirectionalNode<E> prev = null;
-        for (BiDirectionalNode<E> start = first; start != null; start = start.next) {
+        for (BiDirectionalNode<E> start = first; start != null; start = start.getNext()) {
             if (i++ == index) {
-                prev.next = start.next;
+                prev.setNext(start.getNext());
                 return;
             }
             prev = start;
@@ -82,7 +82,7 @@ public class LinkedListArrayBased<E> implements Iterable<E> {
      * @return - data of last element.
      */
     public E getLast() {
-        return last.data;
+        return last.getData();
     }
 
     /**
@@ -90,18 +90,18 @@ public class LinkedListArrayBased<E> implements Iterable<E> {
      */
     public void removeLast() {
         BiDirectionalNode<E> start = first;
-        while (start.next != last) {
-            start = start.next;
+        while (start.getNext() != last) {
+            start = start.getNext();
         }
         last = start;
-        last.next = null;
+        last.setNext(null);
     }
 
     /**
      * Remove first element.
      */
     public void removeFirst() {
-        first = first.next;
+        first = first.getNext();
     }
 
     @Override
@@ -126,27 +126,27 @@ public class LinkedListArrayBased<E> implements Iterable<E> {
             if (cursor == null) {
                 break;
             }
-            if (e.equals(cursor.data)) {
-                BiDirectionalNode<E> next = cursor.next;
-                BiDirectionalNode<E> prev = cursor.prev;
+            if (e.equals(cursor.getData())) {
+                BiDirectionalNode<E> next = cursor.getNext();
+                BiDirectionalNode<E> prev = cursor.getPrev();
                 if (prev == null) {
                     first = next;
                     if (first != null) {
-                        first.prev = null;
+                        first.setPrev(null);
                     }
                     break;
                 }
                 if (next == null) {
                     last = prev;
-                    last.next = null;
+                    last.setNext(null);
                     break;
                 }
-                prev.next = next;
-                next.prev = prev;
+                prev.setNext(next);
+                next.setPrev(prev);
                 break;
             }
-            cursor = cursor.next;
-        } while ((cursor != null) && (cursor.next != last));
+            cursor = cursor.getNext();
+        } while ((cursor != null) && (cursor.getNext() != last));
     }
 }
 

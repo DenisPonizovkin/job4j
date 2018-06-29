@@ -23,8 +23,8 @@ public class FailFastIterator<E> implements Iterator<E> {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        E data = first.data;
-        first = first.next;
+        E data = first.getData();
+        first = first.getNext();
         return data;
     }
 }
