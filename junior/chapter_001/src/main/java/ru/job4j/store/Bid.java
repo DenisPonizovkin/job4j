@@ -21,12 +21,12 @@ public class Bid implements Comparable<Bid> {
    }
 
    public Bid(Bid bid) {
-      id = bid.getId();
-      book = bid.getBook();
+      id = new Long(bid.getId());
+      book = new Long(bid.getBook());
       type = bid.getType();
       action = bid.getAction();
-      price = bid.getPrice();
-      volume = bid.getVolume();
+      price = new Double(bid.getPrice());
+      volume = new Long(bid.getVolume());
    }
 
    public Long getId() {
@@ -111,5 +111,14 @@ public class Bid implements Comparable<Bid> {
          res = 1;
        }
        return res;
+   }
+
+   public void copy(Bid bid) {
+      id = new Long(bid.getId());
+      book = new Long(bid.getBook());
+      type = bid.getType();
+      action = bid.getAction();
+      price = new Double(bid.getPrice());
+      volume = new Long(bid.getVolume());
    }
 }

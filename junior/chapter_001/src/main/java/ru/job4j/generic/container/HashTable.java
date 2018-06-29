@@ -65,7 +65,6 @@ public class HashTable<K, V> implements Iterable<K> {
      */
     private void resizeIfNeed(K key) {
         int hash = key.hashCode();
-        System.out.println("resize if need: " + hash + "/" + data.containerSize());
         if (hash >= data.containerSize()) {
             data.resize(hash * 2);
         }

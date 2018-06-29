@@ -22,8 +22,14 @@ public class DOM {
      * Add or delete bid.
      * @param bid
      */
-    public void add(Bid bid) {
-
+    public void add(Bid bidForAdding) {
+        Bid bid = new Bid();
+        bid.setPrice(bidForAdding.getPrice());
+        bid.setId(bidForAdding.getId());
+        bid.setVolume(bidForAdding.getVolume());
+        bid.setBook(bidForAdding.getBook());
+        bid.setType(bidForAdding.getType());
+        bid.setAction(bidForAdding.getAction());
         if (bid.getType() == DELETE) {
             delete(bid);
         } else {
@@ -78,28 +84,27 @@ public class DOM {
         out = toString(buy, "", out);
         out = toString(sell, "\t", out);
         return String.join("\n", out);
-   }
+    }
 
     private List<String> toString(List<Bid> list, String prefix, List<String> out) {
-        Bid prev = null;
-        for (Iterator it = list.iterator(); it.hasNext();) {
-            if (prev == null) {
-                prev = (Bid) it.next();
-                out.add(prefix + prev.getVolume() + "\t" + prev.getPrice());
-                if (list.size() == 1) {
-                    break;
+        if (list.size() == 1) {
+            out.add(prefix + list.get(0).getVolume() + "\t" + list.get(0).getPrice());
+        } else {
+            Bid current = null;
+            for (int i = 0; i < list.size();) {
+                current = new Bid(list.get(i));
+                Bid next = null;
+                int j = i + 1;
+                for (; j < list.size(); j++) {
+                    next = new Bid(list.get(j));
+                    if (!current.getPrice().equals(next.getPrice())) {
+                        break;
+                    }
+                    current.setVolume(next.getVolume() + current.getVolume());
                 }
-            }
-            Bid current = (Bid) it.next();
-            if (prev.getPrice().equals(current.getPrice())) {
-                if (out.size() > 1) {
-                    out.remove(out.size() - 1);
-                }
-                out.add(prefix + (prev.getVolume() + current.getVolume()) + "\t" + prev.getPrice());
-            } else {
                 out.add(prefix + current.getVolume() + "\t" + current.getPrice());
+                i = j;
             }
-            prev = current;
         }
         return out;
     }
