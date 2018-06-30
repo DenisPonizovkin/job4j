@@ -23,11 +23,9 @@ public class RectangleMove implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
             move();
             try {
-                //System.out.println("CurrentX: " + this.rect.getX() + " / " + limitX);
-                //System.out.println("CurrentY: " + this.rect.getY() + " / " + limitY);
                 if (this.rect.getX() == 0) {
                     //System.out.println("===> Right");
                     Random rnd = new Random(System.currentTimeMillis());
