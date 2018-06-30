@@ -9,6 +9,10 @@ import javafx.stage.Stage;
 public class PingPong extends Application {
     private static final String JOB4J = "Пинг-понг www.job4j.ru";
 
+    //public static void main(String[] args) {
+    //    launch(args);
+    //}
+
     @Override
     public void start(Stage stage) {
         int limitX = 300;
@@ -16,7 +20,7 @@ public class PingPong extends Application {
         Group group = new Group();
         Rectangle rect = new Rectangle(50, 100, 10, 10);
         group.getChildren().add(rect);
-        new Thread(new RectangleMove(rect)).start();
+        new Thread(new RectangleMove(rect, limitX, limitY)).start();
         stage.setScene(new Scene(group, limitX, limitY));
         stage.setTitle(JOB4J);
         stage.setResizable(false);
