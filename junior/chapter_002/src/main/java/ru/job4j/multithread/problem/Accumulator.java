@@ -2,7 +2,7 @@ package ru.job4j.multithread.problem;
 
 public class Accumulator {
 
-    private long acc;
+    private volatile long acc;
 
     public Accumulator() {
         acc = 0;

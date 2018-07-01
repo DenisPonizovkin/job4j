@@ -14,7 +14,7 @@
 	</properties>
 
 	<modules>
-		<module>junior/chapter_001</module>
+		<!-- <module>junior/chapter_001</module> -->
 		<module>junior/chapter_002</module>
 	</modules>
 
@@ -31,7 +31,12 @@
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
-</dependencies>
+		<dependency>
+			<groupId>net.jcip</groupId>
+			<artifactId>jcip-annotations</artifactId>
+			<version>1.0</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>
@@ -68,7 +73,7 @@
 				<artifactId>javafx-maven-plugin</artifactId>
 				<version>8.8.3</version>
 				<configuration>
-					<mainClass>ru.job4j.pingpong.PingPong</mainClass>
+					<mainClass>PingPong</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>
