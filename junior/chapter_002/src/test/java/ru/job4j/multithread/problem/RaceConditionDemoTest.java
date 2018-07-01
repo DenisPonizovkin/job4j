@@ -10,8 +10,8 @@ public class RaceConditionDemoTest {
     @Test
     public void whenMultipleThreadsRaceConditionExists() {
 
-        final int nThreads = 5;
-        final int nAcc = 1000;
+        final int nThreads = 50;
+        final int nAcc = 10000;
         final long res = nThreads * nAcc;
 
         Thread[] threads = new Thread[nThreads];

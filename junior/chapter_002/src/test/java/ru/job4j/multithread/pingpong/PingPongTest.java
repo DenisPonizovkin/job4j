@@ -1,9 +1,7 @@
-package ru.job4j.pingpong;
+package ru.job4j.multithread.pingpong;
 
 
 import javafx.application.Application;
-import org.junit.Test;
-import ru.job4j.multithread.pingpong.PingPong;
 
 import static org.junit.Assert.*;
 
