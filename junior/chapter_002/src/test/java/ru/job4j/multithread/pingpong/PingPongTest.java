@@ -2,12 +2,13 @@ package ru.job4j.multithread.pingpong;
 
 
 import javafx.application.Application;
+import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class PingPongTest {
 
-    //@Test
+    @Test
     public void whenStartTestThenSeePingPog() {
 
         Thread thread = new Thread() { // Wrapper thread.
