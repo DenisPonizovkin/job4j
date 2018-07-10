@@ -11,11 +11,7 @@ import java.util.List;
 public class UserStorage {
 
     @GuardedBy("users")
-    private List<User> users;
-
-    public UserStorage() {
-        users = new ArrayList<>();
-    }
+    private final List<User> users = new ArrayList<User>();
 
     public boolean add(User u) {
         synchronized (users) {
