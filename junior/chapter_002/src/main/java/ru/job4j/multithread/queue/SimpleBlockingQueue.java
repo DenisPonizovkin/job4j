@@ -9,55 +9,43 @@ import java.util.Queue;
 @ThreadSafe
 public class SimpleBlockingQueue<T> {
 
-    private int max;
-    private final Object lock = new Object();
-
-    @GuardedBy("lock")
-    private Queue<T> queue = new LinkedList<>();
+    private final int max;
+    private final Queue<T> queue = new LinkedList<>();
 
     public SimpleBlockingQueue(int max) {
         this.max = max;
     }
 
-    public void offer(T value) {
-        synchronized (lock) {
-            while (queue.size() == max) {
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            queue.offer(value);
+    synchronized public void offer(T value) {
+        while (queue.size() == max) {
             try {
-                if (queue.size() == 0) {
-                    notify();
-                }
-            } catch (IllegalMonitorStateException e) {
+                wait();
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        try {
+            notify();
+            queue.offer(value);
+        } catch (IllegalMonitorStateException e) {
+            e.printStackTrace();
+        }
     }
 
-    public T poll() {
+    synchronized public T poll() {
         T val = null;
-        synchronized (lock) {
-            while (queue.size() == 0) {
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            val = queue.poll();
+        while (queue.size() == 0) {
             try {
-                if (queue.size() == max) {
-                    notify();
-                }
-            } catch (IllegalMonitorStateException e) {
+                wait();
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
+        }
+        try {
+            notify();
+            val = queue.poll();
+        } catch (IllegalMonitorStateException e) {
+            e.printStackTrace();
         }
         return val;
     }
