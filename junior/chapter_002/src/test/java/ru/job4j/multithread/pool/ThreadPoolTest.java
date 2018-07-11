@@ -22,8 +22,13 @@ public class ThreadPoolTest {
     @Test
     public void test() {
         ThreadPool pool = new ThreadPool();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 100; i++) {
             pool.work(new BeepThread("" + i));
+        }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         pool.shutdown();
         assertThat(pool.tasksNumber(), is(0));

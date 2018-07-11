@@ -1,9 +1,7 @@
 package ru.job4j.multithread.pool;
 
-import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -11,7 +9,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class ThreadPool {
     private final List<Thread> threads = new LinkedList<>();
-    private final int size = 1;
+    private final int size = Runtime.getRuntime().availableProcessors();
     private final Queue<Runnable> tasks = new LinkedBlockingQueue<>();
 
     @ThreadSafe
@@ -23,24 +21,24 @@ public class ThreadPool {
         }
 
         @Override
-        synchronized public void run() {
-            System.out.println("Run");
-            synchronized (tasks) {
-                while (tasks.size() == 0) {
+        public void run() {
+            while (true) {
+                synchronized (tasks) {
+                    while (tasks.size() == 0) {
+                        try {
+                            tasks.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    Thread t = new Thread(tasks.peek());
+                    t.start();
                     try {
-                        wait();
+                        t.join();
+                        tasks.remove();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                }
-                Thread t = new Thread(tasks.peek());
-                System.out.println("Start task");
-                t.start();
-                try {
-                    t.join();
-                    tasks.remove();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
             }
         }
@@ -53,23 +51,13 @@ public class ThreadPool {
         for (int i = 0; i < size; i++) {
             threads.get(i).start();
         }
-        for (int i = 0; i < size;) {
-            try {
-                threads.get(i).join();
-                i++;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
     }
 
     public void work(Runnable job) {
-        System.out.println("Work");
         synchronized (tasks) {
             tasks.add(job);
             try {
-                notifyAll();
+                tasks.notifyAll();
             } catch (Exception e) {
                 e.printStackTrace();
             }
