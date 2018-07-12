@@ -9,7 +9,7 @@ public class Lock {
     @GuardedBy("this")
     private boolean locked = false;
 
-    synchronized public void lock() {
+     public synchronized void lock() {
         while (locked) {
             try {
                 Thread.sleep(10);
@@ -20,7 +20,7 @@ public class Lock {
         locked = true;
     }
 
-    synchronized public void unlock() {
+     public synchronized void unlock() {
         locked = false;
     }
 }
