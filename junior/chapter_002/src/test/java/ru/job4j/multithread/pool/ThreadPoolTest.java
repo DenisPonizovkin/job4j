@@ -15,7 +15,6 @@ public class ThreadPoolTest {
 
         @Override
         public void run() {
-            System.out.println("beep " + name);
         }
     }
 

@@ -31,14 +31,7 @@ public class ThreadPool {
                             e.printStackTrace();
                         }
                     }
-                    Thread t = new Thread(tasks.peek());
-                    t.start();
-                    try {
-                        t.join();
-                        tasks.remove();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    tasks.poll().run();
                 }
             }
         }
