@@ -1,6 +1,8 @@
 package ru.job4j.multithread.cache;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,29 +12,20 @@ import static org.hamcrest.core.Is.is;
 
 public class NonblockingCacheTest {
 
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
     @Test
-    public void whenDataIsNotActualThenThrowsException() {
+    public void whenDataIsNotActualThenThrowsException() throws InterruptedException {
+
+        exception.expect(InterruptedException.class);
+        exception.expect(NonblockingCache.OptimisticException.class);
 
         NonblockingCache cache = new NonblockingCache();
         Base b1 = new Base();
         cache.add(1, b1);
 
-        Thread slow = new Thread() {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    cache.update(b1);
-                }
-            }
-        };
-        slow.setName("Slow thread");
-
-        Thread fast = new Thread() {
+        Thread th1 = new Thread() {
             @Override
             public void run() {
                 while (true) {
@@ -40,23 +33,22 @@ public class NonblockingCacheTest {
                 }
             }
         };
-        fast.setName("Fast thread");
+        th1.setName("thread 1");
 
-        slow.start();
-        fast.start();
-        boolean ok = false;
-        try {
-            for (int i = 0; i < 100; i++) {
-                Thread.sleep(100);
-                if ((!slow.isAlive()) || (!fast.isAlive())) {
-                    ok = true;
-                    break;
+        Thread th2 = new Thread() {
+            @Override
+            public void run() {
+                while (true) {
+                    cache.update(b1);
                 }
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        assertThat(ok, is(true));
+        };
+        th2.setName("thread 2");
+
+        th1.start();
+        th2.start();
+        th1.join();
+        th2.join();
     }
 
     @Test
