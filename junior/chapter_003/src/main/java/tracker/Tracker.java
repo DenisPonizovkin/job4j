@@ -77,21 +77,40 @@ public class Tracker implements AutoCloseable {
         return item;
     }
 
-    public void replace(String id, Item item) throws ConnectionIsNull {
+    public void replace(int id, Item item) throws ConnectionIsNull, SQLException {
         if (connection == null) {
             throw new ConnectionIsNull();
         }
+        PreparedStatement st = connection.prepareStatement("update tracker.items set name=? where id=?");
+        st.setString(1, item.getName());
+        st.setInt(2, id);
+        st.executeUpdate();
+        st.close();
     }
 
-    public void delete(String id) {
-
-    }
-
-    public Item[] findAll() throws ConnectionIsNull {
+    public void delete(int id) throws ConnectionIsNull, SQLException {
         if (connection == null) {
             throw new ConnectionIsNull();
         }
-        return null;
+        PreparedStatement st = connection.prepareStatement("delete from tracker.items where id = ?");
+        st.setInt(1, id);
+        st.executeUpdate();
+        st.close();
+    }
+
+    public List<Item> findAll() throws ConnectionIsNull, SQLException {
+        if (connection == null) {
+            throw new ConnectionIsNull();
+        }
+        PreparedStatement st = connection.prepareStatement("select * from tracker.items");
+        ResultSet rs = st.executeQuery();
+        List<Item> items = new ArrayList<Item>();
+        while (rs.next()) {
+            items.add(new Item(rs.getInt(1), rs.getString(2)));
+        }
+        rs.close();
+        st.close();
+        return items;
     }
 
     public List<Item> findByName(String key) throws ConnectionIsNull, SQLException {
@@ -114,11 +133,23 @@ public class Tracker implements AutoCloseable {
         return items;
     }
 
-    public Item findById(String id) throws ConnectionIsNull {
+    public Item findById(int id) throws ConnectionIsNull, SQLException {
         if (connection == null) {
             throw new ConnectionIsNull();
         }
-        return null;
+        PreparedStatement st = connection.prepareStatement("select * from tracker.items where id = ?");
+        st.setInt(1, id);
+        ResultSet rs = st.executeQuery();
+
+        List<Item> items = new ArrayList<Item>();
+        while (rs.next()) {
+            items.add(new Item(rs.getInt(1), rs.getString(2)));
+        }
+
+        rs.close();
+        st.close();
+
+        return items.get(0);
     }
 
     @Override
