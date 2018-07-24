@@ -38,4 +38,43 @@ public class TrackerTest {
 
         assertThat(items.get(items.size() - 1).equals(i), is(true));
     }
+
+    @Test
+    public void whenUpdateItemThenItemUpdated() throws
+            IOException,
+            Tracker.CreateDatabaseStructoreErrors,
+            Tracker.ConnectionIsNull, SQLException {
+
+        Tracker t = new Tracker();
+        t.init();
+
+        Item i1 = new Item(1, "item");
+        i1 = t.add(i1);
+        i1.setName("change");
+        t.replace(i1.getId(), i1);
+
+        Item i2 = t.findById(i1.getId());
+
+        assertThat(i2.getName(), is("change"));
+    }
+
+    @Test
+    public void whenDeleteNItemsThenNumberOfItemsDecreaseByN() throws
+            IOException,
+            Tracker.CreateDatabaseStructoreErrors,
+            Tracker.ConnectionIsNull, SQLException {
+
+        Tracker t = new Tracker();
+        t.init();
+
+        int n = t.findAll().size();
+        int id = 0;
+        for (int i = 0; i < 10; i++) {
+            id = t.add(new Item(1, "item")).getId();
+        }
+        for (int j = 0; j < 5; j++) {
+            t.delete(id - j);
+        }
+        assertThat(t.findAll().size(), is(n + 5));
+    }
 }
