@@ -13,14 +13,7 @@ public class TradingSystem<E> {
     /**
      * Data.
      */
-    HashMap<E, DOM> data;
-
-    /**
-     * Constrcutor.
-     */
-    public TradingSystem() {
-        data = new HashMap<E, DOM>();
-    }
+    private final HashMap<E, DOM> data = new HashMap<E, DOM>();
 
     /**
      * Add bid.
@@ -28,14 +21,14 @@ public class TradingSystem<E> {
      * @param bid
      */
     public void add(E emmiter, Bid bid) {
-        DOM dom = null;
-        if (!data.containsKey(emmiter)) {
-            dom = new DOM();
-        } else {
-            dom = data.get(emmiter);
-        }
+        DOM dom = new DOM();
         dom.add(bid);
-        data.put(emmiter, dom);
+
+        dom = data.putIfAbsent(emmiter, dom);
+        if (dom != null) {
+            dom.add(bid);
+            data.put(emmiter, dom);
+        }
     }
 
     /**

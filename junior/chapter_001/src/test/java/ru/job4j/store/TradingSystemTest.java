@@ -79,7 +79,7 @@ public class TradingSystemTest {
 
         sys.show(companyName);
 
-        assertThat(sys.showAsString(companyName).contains("250\t10"), is(true));
+        assertThat(sys.showAsString(companyName).contains("10.0\t250"), is(true));
     }
 
     @Test
