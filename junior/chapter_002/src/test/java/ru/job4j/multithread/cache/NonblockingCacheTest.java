@@ -13,78 +13,111 @@ import static org.hamcrest.core.Is.is;
 public class NonblockingCacheTest {
     class AsynchTester {
         private Thread thread;
-        private AssertionError exc;
+        private Exception exc = null;
 
-        public AsynchTester(NonblockingCache cache, Base b) {
-            thread = new Thread(new TestThread(cache, b));
+        public AsynchTester(NonblockingCache cache, Base b, int musecs) {
+            thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        try {
+                            cache.update(b);
+                            Thread.sleep(musecs);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (NonblockingCache.OptimisticException e) {
+                            System.out.println("////////////////////////////////////////");
+                            e.printStackTrace();
+                            System.out.println("////////////////////////////////////////");
+                            exc = e;
+                            break;
+                        }
+                    }
+                }
+            });
         }
 
         public void start() {
             thread.start();
         }
 
-        public void test() throws InterruptedException {
+        public void test() throws Exception {
             thread.join();
             if (exc != null) {
-                System.out.println("??????????????????????????????????????????? " + exc.getMessage());
-                if (exc.getMessage().contains("OptimisticException")) {
-                    throw new NonblockingCache.OptimisticException();
-                }
+               throw exc;
             }
         }
     }
-
+    // May be use Thread.UncaughtExceptionHandler
     class TestThread implements Runnable {
 
         private final NonblockingCache cache;
+        private final int musecs;
         private final Base b;
 
-        public TestThread(NonblockingCache cache, Base b) {
+        public TestThread(NonblockingCache cache, Base b, int n) {
             this.cache = cache;
             this.b = b;
+            this.musecs = n;
         }
 
         @Override
         public void run() {
             while (true) {
-                cache.update(b);
+                try {
+                    cache.update(b);
+                    Thread.sleep(musecs);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    System.out.println("////////////////////////////////////////");
+                    e.printStackTrace();
+                    System.out.println("////////////////////////////////////////");
+                    throw e;
+                }
             }
         }
     }
 
     private volatile boolean stopped = false;
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
     @Test(expected = NonblockingCache.OptimisticException.class)
-    public void whenDataIsNotActualThenThrowsException() throws InterruptedException {
-
-        exception.expect(InterruptedException.class);
-        exception.expect(NonblockingCache.OptimisticException.class);
+    public void whenDataIsNotActualThenThrowsException() throws Exception {
 
         NonblockingCache cache = new NonblockingCache();
-        Base b1 = new Base();
-        cache.add(1, b1);
+        Base b = new Base();
+        cache.add(1, b);
 
-        AsynchTester t1 = new AsynchTester(cache, b1);
-        AsynchTester t2 = new AsynchTester(cache, b1);
+        AsynchTester t1 = new AsynchTester(cache, b, 10);
+        AsynchTester t2 = new AsynchTester(cache, b, 10);
+        t1.start();
+        t2.start();
+        t1.test();
+        t2.test();
 
-        try {
-            t1.test();
-            t2.test();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        //Thread t1 = new Thread(new TestThread(cache, b, 10));
+        //Thread t2 = new Thread(new TestThread(cache, b, 10));
+
+        //t1.start();
+        //t2.start();
+
+        //try {
+        //    t1.join();
+        //    t2.join();
+        //} catch (InterruptedException e) {
+        //    System.out.println("???????????????????????????????????????");
+        //    e.printStackTrace();
+        //}
     }
 
-    @Test
+    //@Test
     public void whenPutNElementsThenSizeIsN() {
 
         NonblockingCache cache = new NonblockingCache();
         final int nTh = 10;
         final int n = 10;
         List<Thread> threads = new ArrayList<Thread>();
+
         final int[] id = {0};
         for (int i = 0; i < nTh; i++) {
             threads.add(
