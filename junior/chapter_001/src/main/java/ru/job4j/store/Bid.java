@@ -4,12 +4,12 @@ public class Bid implements Comparable<Bid> {
 
    private final int base = 17;
 
-   Long id;
-   Long book;
-   BidType type;
-   ActionType action;
-   Double price;
-   Long volume;
+   private Long id;
+   private Long book;
+   private BidType type;
+   private ActionType action;
+   private Double price;
+   private Long volume;
 
    public Bid() {
       id = null;

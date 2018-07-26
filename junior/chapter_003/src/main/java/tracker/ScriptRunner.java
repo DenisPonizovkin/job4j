@@ -21,15 +21,15 @@ public class ScriptRunner {
 
     public List<String> run() throws IOException {
         List<String> errors = new ArrayList<>();
-		try (Stream<String> stream = Files.lines(Paths.get(path))) {
-			stream.forEach(line -> {
+        try (Stream<String> stream = Files.lines(Paths.get(path))) {
+            stream.forEach(line -> {
                 try {
                     connection.createStatement().execute(line);
                 } catch (SQLException e) {
                     errors.add(e.getMessage());
                 }
             });
-		}
-		return errors;
+        }
+        return errors;
     }
 }

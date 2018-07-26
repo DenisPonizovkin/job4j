@@ -3,52 +3,28 @@ package ru.job4j.store;
 import java.util.*;
 
 import static ru.job4j.store.ActionType.ASK;
+import static ru.job4j.store.ActionType.BID;
 import static ru.job4j.store.BidType.DELETE;
 
 public class DOM {
 
-    private List<Bid> buy;
-    private List<Bid> sell;
-
-    /**
-     * Constructor.
-     */
-    public DOM() {
-        buy = new ArrayList<Bid>();
-        sell = new ArrayList<Bid>();
-    }
+    private final TreeMap<Bid, Integer> buy  = new TreeMap<>();
+    private final TreeMap<Bid, Integer> sell = new TreeMap<>();
 
     /**
      * Add or delete bid.
      * @param bid
      */
     public void add(Bid bidForAdding) {
-        Bid bid = new Bid();
-        bid.setPrice(bidForAdding.getPrice());
-        bid.setId(bidForAdding.getId());
-        bid.setVolume(bidForAdding.getVolume());
-        bid.setBook(bidForAdding.getBook());
-        bid.setType(bidForAdding.getType());
-        bid.setAction(bidForAdding.getAction());
+
+        Bid bid = new Bid(bidForAdding);
         if (bid.getType() == DELETE) {
             delete(bid);
         } else {
             if (bid.getAction() == ASK) {
-                sell.add(bid);
-                Collections.sort(sell, new Comparator<Bid>() {
-                    @Override
-                    public int compare(Bid l, Bid r) {
-                        return -l.compareTo(r);
-                    }
-                });
+                sell.put(bid, sell.size() + 1);
             } else {
-                buy.add(bid);
-                Collections.sort(buy, new Comparator<Bid>() {
-                    @Override
-                    public int compare(Bid l, Bid r) {
-                        return -l.compareTo(r);
-                    }
-                });
+                buy.put(bid, buy.size() + 1);
             }
         }
     }
@@ -60,20 +36,8 @@ public class DOM {
     public void delete(Bid bid) {
         if (bid.getAction() == ASK) {
             sell.remove(bid);
-            Collections.sort(sell, new Comparator<Bid>() {
-                @Override
-                public int compare(Bid l, Bid r) {
-                    return -l.compareTo(r);
-                }
-            });
         } else {
             buy.remove(bid);
-            Collections.sort(buy, new Comparator<Bid>() {
-                @Override
-                public int compare(Bid l, Bid r) {
-                    return -l.compareTo(r);
-                }
-            });
         }
     }
 
@@ -81,31 +45,44 @@ public class DOM {
     public String toString() {
         List<String> out = new ArrayList<String>();
         out.add("Продажа\tЦена\tПокупка");
-        out = toString(buy, "", out);
-        out = toString(sell, "\t", out);
+        out = toString(buy, "", out, BID);
+        out = toString(sell, "\t", out, ASK);
         return String.join("\n", out);
     }
 
-    private List<String> toString(List<Bid> list, String prefix, List<String> out) {
-        if (list.size() == 1) {
-            out.add(prefix + list.get(0).getVolume() + "\t" + list.get(0).getPrice());
-        } else {
-            Bid current = null;
-            for (int i = 0; i < list.size();) {
-                current = new Bid(list.get(i));
-                Bid next = null;
-                int j = i + 1;
-                for (; j < list.size(); j++) {
-                    next = new Bid(list.get(j));
-                    if (!current.getPrice().equals(next.getPrice())) {
-                        break;
-                    }
-                    current.setVolume(next.getVolume() + current.getVolume());
+    private List<String> toString(TreeMap<Bid, Integer> mapSource, String prefix, List<String> out, ActionType type) {
+        TreeMap<Bid, Integer> map = new TreeMap<Bid, Integer>();
+        map.putAll(mapSource);
+        //if (map.size() == 1) {
+        //    Bid b = map.firstEntry().getValue();
+        //    out.add(prefix + b.getVolume() + "\t" + b.getPrice());
+        //} else {
+        Bid current = null;
+        for (int i = 0; i < mapSource.size();) {
+            Map.Entry<Bid, Integer> e1 = map.firstEntry();
+            current = new Bid(e1.getKey());
+            map.remove(e1.getKey(), e1.getValue());
+            i++;
+
+            Bid next = null;
+            int n = map.size();
+            for (int j = 0; j < n; j++) {
+                Map.Entry<Bid, Integer> e2 = map.firstEntry();
+                next = new Bid(e2.getKey());
+                if (!current.getPrice().equals(next.getPrice())) {
+                    break;
                 }
+                current.setVolume(next.getVolume() + current.getVolume());
+                map.remove(e2.getKey(), e2.getValue());
+                i++;
+            }
+            if (type == BID) {
                 out.add(prefix + current.getVolume() + "\t" + current.getPrice());
-                i = j;
+            } else {
+                out.add(prefix + current.getPrice() + "\t" + current.getVolume());
             }
         }
+        //}
         return out;
     }
 }
