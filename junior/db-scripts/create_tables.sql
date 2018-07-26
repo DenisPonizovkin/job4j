@@ -1,3 +1,5 @@
+-- Create tables. 1. UML системы [#62660]
+
 \connect job4j;
 CREATE SCHEMA uml;
 ALTER SCHEMA uml OWNER TO postgres;
