@@ -4,7 +4,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class NonblockingCache {
 
-     public class OptimisticException extends RuntimeException {
+     public static class OptimisticException extends RuntimeException {
      }
 
      private final ConcurrentHashMap<Integer, Base> data = new ConcurrentHashMap<Integer, Base>();

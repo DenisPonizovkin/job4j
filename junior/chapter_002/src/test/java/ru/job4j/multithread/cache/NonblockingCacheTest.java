@@ -11,11 +11,53 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 public class NonblockingCacheTest {
+    class AsynchTester {
+        private Thread thread;
+        private AssertionError exc;
+
+        public AsynchTester(NonblockingCache cache, Base b) {
+            thread = new Thread(new TestThread(cache, b));
+        }
+
+        public void start() {
+            thread.start();
+        }
+
+        public void test() throws InterruptedException {
+            thread.join();
+            if (exc != null) {
+                System.out.println("??????????????????????????????????????????? " + exc.getMessage());
+                if (exc.getMessage().contains("OptimisticException")) {
+                    throw new NonblockingCache.OptimisticException();
+                }
+            }
+        }
+    }
+
+    class TestThread implements Runnable {
+
+        private final NonblockingCache cache;
+        private final Base b;
+
+        public TestThread(NonblockingCache cache, Base b) {
+            this.cache = cache;
+            this.b = b;
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                cache.update(b);
+            }
+        }
+    }
+
+    private volatile boolean stopped = false;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
-    @Test
+    @Test(expected = NonblockingCache.OptimisticException.class)
     public void whenDataIsNotActualThenThrowsException() throws InterruptedException {
 
         exception.expect(InterruptedException.class);
@@ -25,30 +67,15 @@ public class NonblockingCacheTest {
         Base b1 = new Base();
         cache.add(1, b1);
 
-        Thread th1 = new Thread() {
-            @Override
-            public void run() {
-                while (true) {
-                    cache.update(b1);
-                }
-            }
-        };
-        th1.setName("thread 1");
+        AsynchTester t1 = new AsynchTester(cache, b1);
+        AsynchTester t2 = new AsynchTester(cache, b1);
 
-        Thread th2 = new Thread() {
-            @Override
-            public void run() {
-                while (true) {
-                    cache.update(b1);
-                }
-            }
-        };
-        th2.setName("thread 2");
-
-        th1.start();
-        th2.start();
-        th1.join();
-        th2.join();
+        try {
+            t1.test();
+            t2.test();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
