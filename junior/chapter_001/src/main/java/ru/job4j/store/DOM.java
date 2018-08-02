@@ -53,10 +53,6 @@ public class DOM {
     private List<String> toString(TreeMap<Bid, Integer> mapSource, String prefix, List<String> out, ActionType type) {
         TreeMap<Bid, Integer> map = new TreeMap<Bid, Integer>();
         map.putAll(mapSource);
-        //if (map.size() == 1) {
-        //    Bid b = map.firstEntry().getValue();
-        //    out.add(prefix + b.getVolume() + "\t" + b.getPrice());
-        //} else {
         Bid current = null;
         for (int i = 0; i < mapSource.size();) {
             Map.Entry<Bid, Integer> e1 = map.firstEntry();
