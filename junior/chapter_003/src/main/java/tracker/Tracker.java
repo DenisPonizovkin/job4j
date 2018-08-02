@@ -12,15 +12,9 @@ public class Tracker implements AutoCloseable {
     private Connection connection;
     private String path;
 
-    public static class ConnectionIsNull extends Exception {
-    }
-
-    public static class CreateDatabaseStructoreErrors extends Exception {
-    }
-
-    public void init() throws IOException, CreateDatabaseStructoreErrors {
+    public void init() throws IOException {
         Properties props = new Properties();
-        try( FileInputStream propertiesFile =
+        try (FileInputStream propertiesFile =
                      new FileInputStream(
                               System.getProperty("user.dir")
                                       + "/" + "conn.properties")) {
@@ -29,7 +23,6 @@ public class Tracker implements AutoCloseable {
         try (Connection c = DriverManager.getConnection(props.getProperty("url"),
                 props.getProperty("user"),
                 props.getProperty("password"))) {
-
             connection = c;
             path = props.getProperty("sql_script_path");
             if (databaseStructureIsEmpty()) {
@@ -40,19 +33,19 @@ public class Tracker implements AutoCloseable {
         }
     }
 
-    private void createDatabaseStructure() throws IOException, CreateDatabaseStructoreErrors {
+    private void createDatabaseStructure() throws IOException, SQLException {
         ScriptRunner runner = new ScriptRunner(connection, path);
         List<String> errors = runner.run();
         if (errors.size() > 0) {
             errors.forEach(System.out::println);
-            throw new CreateDatabaseStructoreErrors();
+            throw new SQLException("Can't create database");
         }
     }
 
     private boolean databaseStructureIsEmpty() throws SQLException {
         boolean empty = true;
         DatabaseMetaData dbm = connection.getMetaData();
-        try(ResultSet rs = dbm.getTables(null, null, "items", null)) {
+        try (ResultSet rs = dbm.getTables(null, null, "items", null)) {
             if (rs.next()) {
                 empty = false;
             }
@@ -61,19 +54,13 @@ public class Tracker implements AutoCloseable {
         return empty;
     }
 
-    public Item add(Item item) throws ConnectionIsNull, SQLException {
-        if (connection == null) {
-            throw new ConnectionIsNull();
-        }
-
-        try(PreparedStatement st =
+    public Item add(Item item) throws SQLException {
+        try (PreparedStatement st =
                 connection.prepareStatement("insert into tracker.items (name) values (?)",
                         Statement.RETURN_GENERATED_KEYS)) {
-
             st.setString(1, item.getName());
             st.executeUpdate();
-
-            try(ResultSet keys = st.getGeneratedKeys()) {
+            try (ResultSet keys = st.getGeneratedKeys()) {
                 if (keys.next()) {
                     item.setId(keys.getInt(1));
                 }
@@ -85,11 +72,8 @@ public class Tracker implements AutoCloseable {
         return item;
     }
 
-    public void replace(int id, Item item) throws ConnectionIsNull, SQLException {
-        if (connection == null) {
-            throw new ConnectionIsNull();
-        }
-        try(PreparedStatement st = connection.prepareStatement("update tracker.items set name=? where id=?")) {
+    public void replace(int id, Item item) throws SQLException {
+        try (PreparedStatement st = connection.prepareStatement("update tracker.items set name=? where id=?")) {
             st.setString(1, item.getName());
             st.setInt(2, id);
             st.executeUpdate();
@@ -97,10 +81,7 @@ public class Tracker implements AutoCloseable {
         }
     }
 
-    public void delete(int id) throws ConnectionIsNull, SQLException {
-        if (connection == null) {
-            throw new ConnectionIsNull();
-        }
+    public void delete(int id) throws SQLException {
         try (PreparedStatement st = connection.prepareStatement("delete from tracker.items where id = ?")) {
             st.setInt(1, id);
             st.executeUpdate();
@@ -108,10 +89,7 @@ public class Tracker implements AutoCloseable {
         }
     }
 
-    public List<Item> findAll() throws ConnectionIsNull, SQLException {
-        if (connection == null) {
-            throw new ConnectionIsNull();
-        }
+    public List<Item> findAll() throws SQLException {
         List<Item> items = new ArrayList<Item>();
         try (PreparedStatement st = connection.prepareStatement("select * from tracker.items")) {
             try (ResultSet rs = st.executeQuery()) {
@@ -125,11 +103,7 @@ public class Tracker implements AutoCloseable {
         return items;
     }
 
-    public List<Item> findByName(String key) throws ConnectionIsNull, SQLException {
-        if (connection == null) {
-            throw new ConnectionIsNull();
-        }
-
+    public List<Item> findByName(String key) throws SQLException {
         List<Item> items = new ArrayList<Item>();
         try (PreparedStatement st = connection.prepareStatement("select * from tracker.items where name = ?")) {
             st.setString(1, key);
@@ -144,10 +118,7 @@ public class Tracker implements AutoCloseable {
         return items;
     }
 
-    public Item findById(int id) throws ConnectionIsNull, SQLException {
-        if (connection == null) {
-            throw new ConnectionIsNull();
-        }
+    public Item findById(int id) throws SQLException {
         List<Item> items = new ArrayList<Item>();
         try (PreparedStatement st = connection.prepareStatement("select * from tracker.items where id = ?")) {
             st.setInt(1, id);
