@@ -12,24 +12,22 @@ public class Tracker implements AutoCloseable {
     private Connection connection;
     private String path;
 
-    public void init() throws IOException {
+    public void init() throws IOException, SQLException {
         Properties props = new Properties();
         try (FileInputStream propertiesFile =
                      new FileInputStream(
                               System.getProperty("user.dir")
-                                      + "/" + "conn.properties")) {
+                                      + "/src/main/java/tracker/" + "conn.properties")) {
             props.load(propertiesFile);
-        }
-        try (Connection c = DriverManager.getConnection(props.getProperty("url"),
-                props.getProperty("user"),
-                props.getProperty("password"))) {
-            connection = c;
             path = props.getProperty("sql_script_path");
+            connection = DriverManager.getConnection(
+                    props.getProperty("url"),
+                    props.getProperty("user"),
+                    props.getProperty("password")
+            );
             if (databaseStructureIsEmpty()) {
                 createDatabaseStructure();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
@@ -49,7 +47,6 @@ public class Tracker implements AutoCloseable {
             if (rs.next()) {
                 empty = false;
             }
-            rs.close();
         }
         return empty;
     }
@@ -64,9 +61,7 @@ public class Tracker implements AutoCloseable {
                 if (keys.next()) {
                     item.setId(keys.getInt(1));
                 }
-                keys.close();
             }
-            st.close();
         }
 
         return item;
@@ -77,7 +72,6 @@ public class Tracker implements AutoCloseable {
             st.setString(1, item.getName());
             st.setInt(2, id);
             st.executeUpdate();
-            st.close();
         }
     }
 
@@ -85,7 +79,6 @@ public class Tracker implements AutoCloseable {
         try (PreparedStatement st = connection.prepareStatement("delete from tracker.items where id = ?")) {
             st.setInt(1, id);
             st.executeUpdate();
-            st.close();
         }
     }
 
@@ -96,9 +89,7 @@ public class Tracker implements AutoCloseable {
                 while (rs.next()) {
                     items.add(new Item(rs.getInt(1), rs.getString(2)));
                 }
-                rs.close();
             }
-            st.close();
         }
         return items;
     }
@@ -111,9 +102,7 @@ public class Tracker implements AutoCloseable {
                 while (rs.next()) {
                     items.add(new Item(rs.getInt(1), rs.getString(2)));
                 }
-                rs.close();
             }
-            st.close();
         }
         return items;
     }
@@ -126,16 +115,16 @@ public class Tracker implements AutoCloseable {
                 while (rs.next()) {
                     items.add(new Item(rs.getInt(1), rs.getString(2)));
                 }
-                rs.close();
             }
-            st.close();
         }
         return items.get(0);
     }
 
     @Override
     public void close() throws Exception {
-        connection.close();
+        if (connection != null) {
+            connection.close();
+        }
     }
 
     public boolean connectionIsNull() {
