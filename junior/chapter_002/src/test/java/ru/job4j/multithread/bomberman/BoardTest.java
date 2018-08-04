@@ -9,125 +9,165 @@ import static org.hamcrest.core.Is.is;
 
 public class BoardTest {
 
-    @Test
-    public void whenTwoThreadWorkingThenNoDeadlock() {
+    class MonsterThread implements Runnable {
 
-        Board board = new Board(2, 1);
+        private Monster m = null; // If it will be final then standOn will be executed in main thread
+        // and cell will be locked by main thread and not current.
+        private final Board board;
+        private AssertionError err = null;
+        private Cell start = null;
 
-        Cell c1 = new Cell(0, 0);
-        Cell c2 = new Cell(1, 0);
-
-        Thread t1 = new Thread() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 100; i++) {
-                    try {
-                        board.move(c1, c2);
-                        Thread.sleep(10);
-                        board.move(c2, c1);
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-
-        Thread t2 = new Thread() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 100; i++) {
-                    try {
-                        board.move(c2, c1);
-                        Thread.sleep(10);
-                        board.move(c1, c2);
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-
-        t1.start();
-        t2.start();
-        try {
-            t1.join();
-            t2.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        MonsterThread(Board board, Cell start) {
+            this.board = board;
+            this.start = start;
         }
 
-        assertThat(true, is(true));
+        MonsterThread(Board board) {
+            this.board = board;
+        }
+
+        public Monster getMonster() {
+            return m;
+        }
+
+        public Board getBoard() {
+            return board;
+        }
+
+        @Override
+        public void run() {
+            if (start == null) {
+                do {
+                    Random rnd = new Random();
+                    int wLimit = board.getWidthLimit();
+                    int hLimit = board.getHeightLimit();
+                    int x = rnd.nextInt(wLimit);
+                    int y = rnd.nextInt(hLimit);
+                    start = new Cell(x, y);
+                    try {
+                        m = new Monster(board, start);
+                        m.init();
+                        break;
+                    } catch (Exception e) {
+                        continue;
+                    }
+                } while (true);
+            }
+            for (int i = 0; i < 50; i++) {
+                try {
+                    m.randomMoving();
+                    Thread.sleep(10);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    assertThat(true, is(false));
+                }
+            }
+        }
+    }
+
+
+    class MonsterMovesAlwaysRight extends MonsterThread {
+
+        MonsterMovesAlwaysRight(Board board) throws InterruptedException {
+            super(board);
+            for (int i = 0; i < 10; i++) {
+                Cell block = new Cell(5, i);
+                try {
+                    board.addBlock(block);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    assertThat(true, is(false));
+                }
+            }
+
+        }
+
+        @Override
+        public void run() {
+            Monster m = new Monster(getBoard(), new Cell(0, 4));
+            try {
+                m.init();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                assertThat(true, is((false)));
+            }
+            for (int i = 0; i < 30; i++) {
+                try {
+                    m.right();
+                    System.out.println("==================> Cell " + i + ": " + m.getCurrentCell());
+                    assertThat(m.getCurrentCell().getX() >= 5, is(false));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    assertThat(true, is(false));
+                }
+            }
+        }
+    }
+
+    class AsynchTesterMonsterMovesRight {
+        private Thread thread;
+        private AssertionError err = null;
+
+        // https://stackoverflow.com/questions/2596493/junit-assert-in-thread-throws-exception/2596530#2596530
+        public AsynchTesterMonsterMovesRight(Runnable runnable) throws InterruptedException {
+
+            thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        runnable.run();
+                    } catch (AssertionError e) {
+                        err = e;
+                    }
+                }
+            });
+        }
+
+        public void start() {
+            thread.start();
+        }
+
+        public void test() throws Exception {
+            thread.join();
+            if (err != null) {
+                throw err;
+            }
+        }
+    }
+
+    //@Test
+    public void whenVerticalWallOnBoardThenMonsterCantGoOverIt() throws Exception {
+        Board board = new Board(10, 10);
+        MonsterMovesAlwaysRight runnable = new MonsterMovesAlwaysRight(board);
+        AsynchTesterMonsterMovesRight t = new AsynchTesterMonsterMovesRight(runnable);
+        t.start();
+        t.test();
     }
 
     @Test
-    public void whenTwoThreadWorkingThenCellsIsLocked() {
-
-        Board board = new Board(100, 100);
-
-        Cell current1 = new Cell(0, 0);
-        Cell current2 = new Cell(1, 0);
-        Cell last1 = new Cell(0, 0);
-        Cell last2 = new Cell(1, 0);
-
-        Thread t1 = new Thread() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 1; i++) {
-                    Random rnd = new Random(System.currentTimeMillis());
-                    Cell to = new Cell(rnd.nextInt(100), rnd.nextInt(100));
-                    try {
-                        board.move(current1, last1);
-
-                        System.out.println("From " + current1 + " to " + last1);
-
-                        Thread.sleep(10);
-                        current1.setX(last1.getX());
-                        current1.setY(last1.getY());
-                        last1.setX(to.getX());
-                        last1.setY(to.getY());
-
-                        System.out.println("Moving success");
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-
-        Thread t2 = new Thread() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 100; i++) {
-                    Random rnd = new Random(System.currentTimeMillis());
-                    Cell to = new Cell(rnd.nextInt(100), rnd.nextInt(100));
-                    try {
-                        board.move(current2, last2);
-                        Thread.sleep(10);
-                        current2.setX(last2.getX());
-                        current2.setY(last2.getY());
-                        last2.setX(to.getX());
-                        last2.setY(to.getY());
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-
-        t1.start();
-        t2.start();
-        try {
-            t1.join();
-            t2.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    public void whenMonstersMoveThenNoExceptions() throws Exception {
+        Board board = new Board(30, 30);
+        AsynchTesterMonsterMovesRight[] tests = new AsynchTesterMonsterMovesRight[20];
+        MonsterThread[] threads = new MonsterThread[20];
+        for (int i = 0; i < 20; i++) {
+            threads[i] = new MonsterThread(board);
+            tests[i] = new AsynchTesterMonsterMovesRight(threads[i]);
         }
-
-        assertThat(current1.getX(), is(last1.getX()));
-        assertThat(current1.getY(), is(last1.getY()));
-        assertThat(current2.getX(), is(last2.getX()));
-        assertThat(current2.getY(), is(last2.getY()));
+        for (int i = 0; i < 20; i++) {
+            tests[i].start();
+        }
+        for (int i = 0; i < 20; i++) {
+            tests[i].test();
+        }
+        int n = 0;
+        for (int i = 0; i < 20; i++) {
+            System.out.println("-------------- " + i);
+            Cell start = new Cell(0, i);
+            MonsterThread t = threads[i];
+            Monster m = t.getMonster();
+            Cell c = m.getCurrentCell();
+            n += t.getMonster().getCurrentCell().equals(start) ? 1 : 0;
+        }
+        assertThat(n > 15, is(false));
     }
 }
