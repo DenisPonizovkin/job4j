@@ -27,7 +27,7 @@ public class ValidateService {
     }
 
     public boolean update(User u) {
-        return update(u);
+        return store.update(u);
     }
 
     public boolean delete(User u) {

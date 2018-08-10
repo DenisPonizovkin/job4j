@@ -17,13 +17,13 @@ public class MemoryStore implements Store {
     private MemoryStore() {
         users = new CopyOnWriteArrayList<User>();
         for (int i = 0; i < 10; i++) {
-           User u = new User();
-           u.setId(i);
-           u.setEmail("user" + i + "@gmail.com");
-           u.setLogin("login" + i);
-           u.setName("user" + i);
-           u.setCreateDate(System.currentTimeMillis());
-           users.add(u);
+            User u = new User();
+            u.setId(i);
+            u.setEmail("user" + i + "@gmail.com");
+            u.setLogin("login" + i);
+            u.setName("user" + i);
+            u.setCreateDate(System.currentTimeMillis());
+            users.add(u);
         }
     }
 
@@ -38,8 +38,20 @@ public class MemoryStore implements Store {
     }
 
     @Override
-    public boolean delete(User u) {
-        return false;
+    public boolean delete(User rm) {
+        int i = 0;
+        for (User u : users) {
+            if (u.getId() == rm.getId()) {
+                break;
+            }
+            i++;
+        }
+        boolean ok = false;
+        if (i < users.size()) {
+            ok = true;
+            users.remove(i);
+        }
+        return ok;
     }
 
     @Override
@@ -52,8 +64,8 @@ public class MemoryStore implements Store {
         User res = null;
         for (User u : users) {
             if (u.getId() == id) {
-               res = u;
-               break;
+                res = u;
+                break;
             }
         }
         return res;

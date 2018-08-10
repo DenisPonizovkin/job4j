@@ -28,9 +28,30 @@ public class UserServlet extends javax.servlet.http.HttpServlet {
         };
     }
 
+    public Function<HttpServletRequest, Boolean> delete() {
+        return req -> {
+            User u = new User();
+            u.setId(Integer.parseInt(req.getParameter("id")));
+            return validator.delete(u);
+        };
+    }
+
+    public Function<HttpServletRequest, Boolean> update() {
+        return req -> {
+            User u = new User();
+            u.setId(Integer.parseInt(req.getParameter("id")));
+            u.setName(req.getParameter("name"));
+            u.setLogin(req.getParameter("login"));
+            u.setEmail(req.getParameter("email"));
+            u.setCreateDate(Integer.parseInt(req.getParameter("createDate")));
+            return validator.update(u);
+        };
+    }
+
     public UserServlet() {
         map = new PostParameter2Function();
         map.add("add", this.add());
+        map.add("delete", this.delete());
     }
 
     @Override
