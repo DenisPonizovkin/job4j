@@ -15,8 +15,10 @@
 
 	<modules>
 		<!-- <module>junior/chapter_001</module> -->
-		<module>junior/chapter_002</module>
+		<!-- <<module>junior/chapter_002</module>  -->
 		<!-- <module>junior/chapter_003</module>  -->
+		<module>junior/HelloWorld</module>
+		<module>junior/user_crud</module>
 	</modules>
 
 	<dependencies>
