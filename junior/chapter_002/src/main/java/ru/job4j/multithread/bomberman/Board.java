@@ -5,10 +5,25 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Board {
 
+    class CellIsBusy extends RuntimeException {
+
+    }
+
+    public void standOn(Cell c) throws InterruptedException {
+        final ReentrantLock lock = board[c.getY()][c.getX()];
+        try {
+            if (!lock.tryLock(500, TimeUnit.MILLISECONDS)) {
+                throw new CellIsBusy();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
     private final int m;
     private final int n;
     private final ReentrantLock[][] board;
-    private final Cell position;
 
     public Board(int m, int n) {
         this.m = m;
@@ -19,7 +34,6 @@ public class Board {
                 board[i][j] = new ReentrantLock();
             }
         }
-        position = new Cell(0, 0);
     }
 
     public int getHeightLimit() {
@@ -35,21 +49,29 @@ public class Board {
     }
 
     public void move(Cell from, Cell to) throws InterruptedException {
+        if (to.getX() >= getWidthLimit() || to.getY() >= getHeightLimit()) {
+           throw new CellIsBusy();
+        }
         final ReentrantLock lock = board[to.getY()][to.getX()];
         boolean ok = false;
+        boolean canLock = false;
         try {
             if (lock.tryLock(500, TimeUnit.MILLISECONDS)) {
+                canLock = true;
                 board[from.getY()][from.getX()].unlock();
-                position.setX(to.getX());
-                position.setY(to.getY());
+                ok = true;
             }
         } catch (InterruptedException e) {
             throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
         } finally {
             if (!ok) {
-                board[to.getY()][to.getX()].unlock();
-                position.setX(from.getX());
-                position.setY(from.getY());
+                if (canLock) {
+                    board[to.getY()][to.getX()].unlock();
+                }
+                throw new CellIsBusy();
             }
         }
     }
@@ -57,6 +79,20 @@ public class Board {
     public boolean isLocked(Cell cell) {
         final ReentrantLock lock = board[cell.getY()][cell.getX()];
         return lock.isLocked();
+    }
+
+    public void addBlock(Cell c) throws InterruptedException {
+        final ReentrantLock lock = board[c.getY()][c.getX()];
+        try {
+            if (!lock.tryLock(500, TimeUnit.MILLISECONDS)) {
+                board[c.getY()][c.getX()].unlock();
+            }
+        } catch (InterruptedException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
 }
