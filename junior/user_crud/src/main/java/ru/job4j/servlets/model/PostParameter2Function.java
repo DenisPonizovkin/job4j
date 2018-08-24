@@ -13,7 +13,7 @@ public class PostParameter2Function {
         map.put(parameterNanme, f);
     }
 
-    public void run(String key, HttpServletRequest req) {
-        map.get(key).apply(req);
+    public boolean run(String key, HttpServletRequest req) {
+        return map.get(key).apply(req);
     }
 }

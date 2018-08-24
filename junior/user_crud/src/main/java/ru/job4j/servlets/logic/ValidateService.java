@@ -23,15 +23,33 @@ public class ValidateService {
     }
 
     public boolean add(User u) {
-        return store.add(u);
+        boolean ok = true;
+        if (store.findById(u.getId()) != null) {
+           ok = false;
+        } else {
+            store.add(u);
+        }
+        return ok;
     }
 
     public boolean update(User u) {
-        return store.update(u);
+        boolean ok = true;
+        if (store.findById(u.getId()) == null) {
+            ok = false;
+        } else {
+            store.update(u);
+        }
+        return ok;
     }
 
     public boolean delete(User u) {
-        return store.delete(u);
+        boolean ok = true;
+        if (store.findById(u.getId()) == null) {
+            ok = false;
+        } else {
+            store.delete(u);
+        }
+        return ok;
     }
 
     public List<User> findAll() {

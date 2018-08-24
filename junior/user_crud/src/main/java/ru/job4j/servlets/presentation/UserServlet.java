@@ -52,6 +52,7 @@ public class UserServlet extends javax.servlet.http.HttpServlet {
         map = new PostParameter2Function();
         map.add("add", this.add());
         map.add("delete", this.delete());
+        map.add("update", this.update());
     }
 
     @Override
@@ -72,6 +73,13 @@ public class UserServlet extends javax.servlet.http.HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        map.run(req.getParameter("action"), req);
+        res.setContentType("text/html");
+        PrintWriter writer = new PrintWriter(res.getOutputStream());
+        if (!map.run(req.getParameter("action"), req)) {
+            writer.append("Operation is not valid\n");
+        } else {
+            writer.append("Operation complete\n");
+        }
+        writer.flush();
     }
 }

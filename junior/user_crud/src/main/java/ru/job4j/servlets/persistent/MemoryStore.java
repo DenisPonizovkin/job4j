@@ -34,7 +34,9 @@ public class MemoryStore implements Store {
 
     @Override
     public boolean update(User u) {
-        return false;
+        users.remove(u);
+        users.add(u);
+        return true;
     }
 
     @Override
