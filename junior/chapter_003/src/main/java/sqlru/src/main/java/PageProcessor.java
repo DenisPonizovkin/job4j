@@ -7,13 +7,28 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class PageProcessor {
 
     private final static Logger LOGGER = Logger.getLogger(PageProcessor.class);
+    private final Map<String, String> mapMonthToNum;
+
+    public PageProcessor() {
+        mapMonthToNum = new HashMap<String, String>();
+        mapMonthToNum.put("янв", "01");
+        mapMonthToNum.put("фев", "02");
+        mapMonthToNum.put("мар", "03");
+        mapMonthToNum.put("апр", "04");
+        mapMonthToNum.put("май", "05");
+        mapMonthToNum.put("июн", "06");
+        mapMonthToNum.put("июл", "07");
+        mapMonthToNum.put("авг", "08");
+        mapMonthToNum.put("сен", "09");
+        mapMonthToNum.put("окт", "10");
+        mapMonthToNum.put("ноя", "11");
+        mapMonthToNum.put("дек", "12");
+    }
 
     public Document run(String url) throws IOException {
         return Jsoup.connect(url).get();
@@ -30,10 +45,7 @@ public class PageProcessor {
             LOGGER.debug("Element: " + e);
             Ad ad = new Ad();
             String theme = tds.get(1).toString().split(">")[2].replace("</a", "");
-            if (!theme.toLowerCase().contains("java")) {
-                continue;
-            }
-            if (theme.toLowerCase().contains("script")) {
+            if ((!theme.toLowerCase().contains("java")) || (theme.toLowerCase().contains("script"))) {
                 continue;
             }
             ad.setTheme(theme);
@@ -57,18 +69,9 @@ public class PageProcessor {
     }
 
     private String strMonthToNum(String dateTime) {
-        dateTime = dateTime.replace("янв", "01");
-        dateTime = dateTime.replace("фев", "02");
-        dateTime = dateTime.replace("мар", "03");
-        dateTime = dateTime.replace("апр", "04");
-        dateTime = dateTime.replace("май", "05");
-        dateTime = dateTime.replace("июн", "06");
-        dateTime = dateTime.replace("июл", "07");
-        dateTime = dateTime.replace("авг", "08");
-        dateTime = dateTime.replace("сен", "09");
-        dateTime = dateTime.replace("окт", "10");
-        dateTime = dateTime.replace("ноя", "11");
-        dateTime = dateTime.replace("дек", "12");
+        for (Map.Entry<String, String> e: mapMonthToNum.entrySet()) {
+           dateTime = dateTime.replace(e.getKey(), e.getValue());
+        }
         return dateTime;
     }
 

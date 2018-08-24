@@ -14,9 +14,7 @@ public class DbDriver implements AutoCloseable {
         Properties props = new Properties();
         try (FileInputStream propertiesFile =
                      new FileInputStream(
-                             System.getProperty("user.dir")
-                                     + "/junior/chapter_003//src/main/java/sqlru/src/main/resources/"
-                                     + "app.properties")) {
+                             String.valueOf(getClass().getResourceAsStream("app.properties")))) {
 
             props.load(propertiesFile);
             String url = "jdbc:"
@@ -32,7 +30,6 @@ public class DbDriver implements AutoCloseable {
     }
 
     public int vacanciesNumber() throws SQLException {
-
         int n = 0;
         try (Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery("select count(*) from sqlru.vacancies")) {
