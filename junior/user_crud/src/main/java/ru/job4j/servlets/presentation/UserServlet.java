@@ -60,11 +60,11 @@ public class UserServlet extends javax.servlet.http.HttpServlet {
         res.setContentType("text/html");
         PrintWriter writer = new PrintWriter(res.getOutputStream());
         for (User u: MemoryStore.getInstance().findAll()) {
-            writer.append("User "
-                    + u.getId() + ": "
-                    + u.getEmail() + " "
-                    + u.getLogin() + " "
-                    + u.getName() + " "
+            writer.append("User["
+                    + u.getId() + "]<br>email: "
+                    + u.getEmail() + "<br>login: "
+                    + u.getLogin() + "<br>name:"
+                    + u.getName() + "<br>create date:"
                     + u.getCreateDate()
                     + "<br>================================================<br>");
         }
