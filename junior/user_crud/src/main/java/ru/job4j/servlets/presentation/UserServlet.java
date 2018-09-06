@@ -57,18 +57,36 @@ public class UserServlet extends javax.servlet.http.HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        res.setContentType("text/html");
-        PrintWriter writer = new PrintWriter(res.getOutputStream());
-        for (User u: MemoryStore.getInstance().findAll()) {
-            writer.append("User["
-                    + u.getId() + "]<br>email: "
-                    + u.getEmail() + "<br>login: "
-                    + u.getLogin() + "<br>name:"
-                    + u.getName() + "<br>create date:"
-                    + u.getCreateDate()
-                    + "<br>================================================<br>");
-        }
-        writer.flush();
+        res.sendRedirect("users-list.jsp");
+        //res.setContentType("text/html");
+        //PrintWriter writer = new PrintWriter(res.getOutputStream());
+        //writer.append("<html>");
+        //writer.append("<body>");
+        //writer.append("<table>");
+        //for (User u: MemoryStore.getInstance().findAll()) {
+        //    writer.append("<tr>");
+        //    writer.append("<td>");
+        //    writer.append("User["
+        //            + u.getId() + "]<br>email: "
+        //            + u.getEmail() + "<br>login: "
+        //            + u.getLogin() + "<br>name:"
+        //            + u.getName() + "<br>create date:"
+        //            + u.getCreateDate());
+        //    writer.append("</td>");
+
+        //    writer.append("<td>");
+        //    writer.append("<% int id = " + u.getId() + "%>");
+        //    writer.append("<form action=\"/\" method=\"post\">");
+        //    writer.append("<input type=\"hidden\" name=\"id\" value=\"<%=id%>\"/>");
+        //    writer.append("<button type=\"submit\">Delete</button>");
+        //    writer.append("</form>");
+        //    writer.append("</td>");
+        //    writer.append("</tr>");
+        //}
+        //writer.append("</table>");
+        //writer.append("</body>");
+        //writer.append("</html>");
+        //writer.flush();
     }
 
     @Override

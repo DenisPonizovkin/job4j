@@ -22,7 +22,7 @@ public class MemoryStore implements Store {
             u.setEmail("user" + i + "@gmail.com");
             u.setLogin("login" + i);
             u.setName("user" + i);
-            u.setCreateDate(System.currentTimeMillis());
+            u.setCreateDate(System.currentTimeMillis() / 1000);
             users.add(u);
         }
     }
