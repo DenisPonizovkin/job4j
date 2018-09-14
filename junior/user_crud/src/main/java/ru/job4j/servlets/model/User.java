@@ -1,15 +1,14 @@
 package ru.job4j.servlets.model;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class User {
 
     private int id = -1;
-    private String name = "";
-    private String login = "";
-    private String email = "";
-    private long createDate = 0;
+    private String name;
+    private String login;
+    private String email;
+    private long createDate;
 
     public boolean isEmpty() {
         return id == -1;

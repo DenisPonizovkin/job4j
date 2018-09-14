@@ -3,8 +3,8 @@ package ru.job4j.servlets.presentation;
 import ru.job4j.servlets.logic.ValidateService;
 import ru.job4j.servlets.model.PostParameter2Function;
 import ru.job4j.servlets.model.User;
-import ru.job4j.servlets.persistent.MemoryStore;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -56,37 +56,8 @@ public class UserServlet extends javax.servlet.http.HttpServlet {
     }
 
     @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        res.sendRedirect("users-list.jsp");
-        //res.setContentType("text/html");
-        //PrintWriter writer = new PrintWriter(res.getOutputStream());
-        //writer.append("<html>");
-        //writer.append("<body>");
-        //writer.append("<table>");
-        //for (User u: MemoryStore.getInstance().findAll()) {
-        //    writer.append("<tr>");
-        //    writer.append("<td>");
-        //    writer.append("User["
-        //            + u.getId() + "]<br>email: "
-        //            + u.getEmail() + "<br>login: "
-        //            + u.getLogin() + "<br>name:"
-        //            + u.getName() + "<br>create date:"
-        //            + u.getCreateDate());
-        //    writer.append("</td>");
-
-        //    writer.append("<td>");
-        //    writer.append("<% int id = " + u.getId() + "%>");
-        //    writer.append("<form action=\"/\" method=\"post\">");
-        //    writer.append("<input type=\"hidden\" name=\"id\" value=\"<%=id%>\"/>");
-        //    writer.append("<button type=\"submit\">Delete</button>");
-        //    writer.append("</form>");
-        //    writer.append("</td>");
-        //    writer.append("</tr>");
-        //}
-        //writer.append("</table>");
-        //writer.append("</body>");
-        //writer.append("</html>");
-        //writer.flush();
+    public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+        req.getRequestDispatcher("users-list.jsp").forward(req, res);
     }
 
     @Override
