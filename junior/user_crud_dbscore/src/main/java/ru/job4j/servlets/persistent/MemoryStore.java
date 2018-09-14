@@ -7,7 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MemoryStore implements Store<User> {
 
-    private static MemoryStore ourInstance = new MemoryStore();
+    private static final MemoryStore ourInstance = new MemoryStore();
     private final List<User> users;
 
     public static MemoryStore getInstance() {

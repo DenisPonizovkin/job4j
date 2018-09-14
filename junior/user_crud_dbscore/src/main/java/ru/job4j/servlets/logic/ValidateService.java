@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ValidateService {
 
-    private static ValidateService ourInstance = new ValidateService();
+    private final static ValidateService ourInstance = new ValidateService();
     private final DbStore store = DbStore.getInstance();
 
     public static ValidateService getInstance() {
