@@ -2,20 +2,21 @@ package ru.job4j.servlets.persistent;
 
 import ru.job4j.servlets.model.User;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MemoryStore implements Store {
 
-    private static MemoryStore ourInstance = new MemoryStore();
-    private final List<User> users;
+    private static final MemoryStore ourInstance = new MemoryStore();
+    private final List<User> users = new CopyOnWriteArrayList<User>();
 
     public static MemoryStore getInstance() {
         return ourInstance;
     }
 
     private MemoryStore() {
-        users = new CopyOnWriteArrayList<User>();
         for (int i = 0; i < 10; i++) {
             User u = new User();
             u.setId(i);
@@ -41,19 +42,11 @@ public class MemoryStore implements Store {
 
     @Override
     public boolean delete(User rm) {
-        int i = 0;
-        for (User u : users) {
-            if (u.getId() == rm.getId()) {
-                break;
-            }
-            i++;
-        }
-        boolean ok = false;
-        if (i < users.size()) {
-            ok = true;
+        int i = users.indexOf(rm);
+        if (i >= 0) {
             users.remove(i);
         }
-        return ok;
+        return i >= 0;
     }
 
     @Override
@@ -63,13 +56,7 @@ public class MemoryStore implements Store {
 
     @Override
     public User findById(int id) {
-        User res = null;
-        for (User u : users) {
-            if (u.getId() == id) {
-                res = u;
-                break;
-            }
-        }
-        return res;
+        Optional<User> res = users.stream().filter(u -> u.getId() == id).findFirst();
+        return res.get();
     }
 }
