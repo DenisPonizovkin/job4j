@@ -71,4 +71,8 @@ public class ValidateService {
     public Role getRoleByName(String role) {
         return store.getRoleByName(role);
     }
+
+    public List<String> getRoles() {
+        return store.getRoles();
+    }
 }

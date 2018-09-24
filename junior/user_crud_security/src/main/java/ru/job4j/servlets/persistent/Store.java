@@ -14,4 +14,5 @@ public interface Store<T> {
     public boolean isCredential(String login, String password);
     public T findByLogin(String login);
     public Role getRoleByName(String role);
+    public List<String> getRoles();
 }

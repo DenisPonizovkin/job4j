@@ -60,13 +60,21 @@ public class UserCreateServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        User u = new User();
-        req.setAttribute("id", "");
-        req.setAttribute("name", "");
-        req.setAttribute("login", "");
-        req.setAttribute("email", "");
-        req.setAttribute("role", "");
-        req.setAttribute("password", "");
-        req.getRequestDispatcher("WEB-INF/view/user-create-form.jsp").forward(req, res);
+        if (validator.findByLogin((String) req
+                .getSession().getAttribute("login"))
+                .getRole().getName().equals("admin")) {
+            User u = new User();
+            req.setAttribute("id", "");
+            req.setAttribute("name", "");
+            req.setAttribute("login", "");
+            req.setAttribute("email", "");
+            req.setAttribute("roles", validator.getRoles());
+            req.setAttribute("role", "admin");
+            req.setAttribute("password", "");
+            req.getRequestDispatcher("WEB-INF/view/user-create-form.jsp").forward(req, res);
+        } else {
+            req.getSession().setAttribute("error", "You can't create users");
+            req.getRequestDispatcher("WEB-INF/view/error.jsp").forward(req, res);
+        }
     }
 }

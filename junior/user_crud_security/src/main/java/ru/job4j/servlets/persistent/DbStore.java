@@ -1,12 +1,14 @@
 package ru.job4j.servlets.persistent;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import ru.job4j.servlets.model.User;
 import ru.job4j.servlets.model.Role;
+import ru.job4j.servlets.model.User;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class DbStore implements Store<User> {
     private static final BasicDataSource SOURCE = new BasicDataSource();
@@ -250,5 +252,18 @@ public class DbStore implements Store<User> {
             e.printStackTrace();
         }
         return r;
+    }
+
+    @Override
+    public List<String> getRoles() {
+        List<User> users = findAll();
+        return users.stream()
+                .map(new Function<User, String>() {
+                    @Override
+                    public String apply(User user) {
+                        return user.getRole().getName();
+                    }
+                })
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }

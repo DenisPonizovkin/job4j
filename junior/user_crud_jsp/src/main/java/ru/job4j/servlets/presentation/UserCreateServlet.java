@@ -45,6 +45,6 @@ public class UserCreateServlet extends HttpServlet {
         req.setAttribute("name", "");
         req.setAttribute("login", "");
         req.setAttribute("email", "");
-        req.getRequestDispatcher("user-create-form.jsp").forward(req, res);
+        req.getRequestDispatcher("/WEB-INF/view/user-create-form.jsp").forward(req, res);
     }
 }

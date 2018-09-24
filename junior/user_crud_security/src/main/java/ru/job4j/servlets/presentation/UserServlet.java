@@ -58,6 +58,9 @@ public class UserServlet extends javax.servlet.http.HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
         req.getSession().setAttribute("users", validator.findAll());
+        req.getSession().setAttribute("role", validator.findByLogin(
+                (String) req.getSession().getAttribute("login"))
+        );
         req.getRequestDispatcher("/WEB-INF/view/users-list.jsp").forward(req, res);
     }
 
