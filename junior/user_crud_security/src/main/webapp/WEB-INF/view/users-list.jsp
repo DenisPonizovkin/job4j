@@ -1,5 +1,4 @@
-<%@ page import="ru.job4j.servlets.persistent.DbStore" %>
-<%@ page import="ru.job4j.servlets.model.User" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,32 +7,32 @@
 </head>
 <body>
 <table border="1">
-<% for (User u: DbStore.getInstance().findAll()) { %>
-<tr style="border-bottom: 1px solid #000;">
-    <td>
-        User[<%=u.getId()%>]:<br>
-        Name: <%=u.getName() %><br>
-        Login: <%=u.getLogin() %><br>
-        Email: <%=u.getEmail() %><br>
-        Password: <%=u.getPassword() %><br>
-        Role: <%=u.getRole().getName() %><br>
-        Creation Date: <%=u.getFormattedCreationDate() %><br>
-    </td>
-    <td>
-        <form action="/edit" method="get">
-            <input type="hidden" name="id" value="<%=u.getId()%>"/>
-            <button type="submit">Edit</button>
-        </form>
-    </td>
-    <td>
-        <form action="/" method="post">
-            <input type="hidden" name="id" value="<%=u.getId()%>"/>
-            <input type="hidden" name="operation" value="delete"/>
-            <button type="submit">Delete</button>
-        </form>
-    </td>
-</tr>
-<% } %>
+<c:forEach var="u" items="${users}">
+    <tr style="border-bottom: 1px solid #000;">
+        <td>
+            User[<c:out value="${u.getId()}"/>]:<br>
+            Name: <c:out value="${u.getName()}"/><br>
+            Login: <c:out value="${u.getLogin()}"/><br>
+            Email: <c:out value="${u.getEmail()}"/><br>
+            Password: <c:out value="${u.getPassword()}"/><br>
+            Role: <c:out value="${u.getRole().getName()}"/><br>
+            Creation Date: <c:out value="${u.getFormattedCreationDate()}"/><br>
+        </td>
+        <td>
+            <form action="/edit" method="get">
+                <input type="hidden" name="id" value="<c:out value="${u.getId()}"/>
+                <button type="submit">Edit</button>
+            </form>
+        </td>
+        <td>
+            <form action="/" method="post">
+                <input type="hidden" name="id" value="<c:out value="${u.getId()}"/>
+                <input type="hidden" name="operation" value="delete"/>
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+</c:forEach>
 </table>
 </body>
 </html>
