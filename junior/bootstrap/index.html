@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Bootstrap Example</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	</head>
+
+	<script>
+        function loadUsers() {
+            $.ajax('./index.html', {
+                    method: 'get',
+                	complete:  function(data) {
+                        var result =
+							"<tr>"
+							+ "<td>First Name</td>"
+                        	+ "<td>Second Name</td>"
+                        	+ "<td>Sex</td>"
+                        	+ "<td>Description</td>"
+                        	+ "</tr>";
+                        var users = JSON.parse(data.responseText);
+                        for (var i = 0; i != users.length; i++) {
+							result +=
+                                "<tr>"
+                                + "<td>" + users[i].fname + "</td>"
+                                + "<td>" + users[i].sname + "</td>"
+                                + "<td>" + users[i].sex + "</td>"
+                                + "<td>" + users[i].desc + "</td>"
+                                + "</tr>";
+						}
+						var table = document.getElementById("table");
+                        table.innerHTML = result;
+					}
+                }
+            );
+        }
+
+		function createUser() {
+		    fname = document.getElementById("fname");
+            sname = document.getElementById("sname");
+            sex = document.getElementById("sex");
+            desc = document.getElementById("desc");
+		    $.ajax('./index.html', {
+		       		method: 'post',
+					data: {fname: fname, sname: sname, sex: sex, desc: desc},
+					complete: loadUsers()
+				}
+			);
+		}
+	</script>
+
+	<body>
+		<div class="container-fluid">
+			<h1>My First Bootstrap Page</h1>
+			<p>This is some text.</p> 
+		</div>
+
+		<form action="./index.html" method="post">
+			<div class="form-group">
+				<label for="fname">First Name</label>
+				<input type="text" class="form-control" id="fname">
+
+				<label for="sname">Second Name</label>
+				<input type="text" class="form-control" id="sname">
+
+				<label for="sex">Sex</label>
+				<input type="text" class="form-control" id="sex">
+
+				<label for="desc">Description</label>
+				<input type="text" class="form-control" id="desc">
+			</div>
+			<button type="submit" class="btn btn-default" onclick="return createUser();">Submit</button>
+		</form> 
+
+		<div class="table-responsive">
+			<table class="table" id="table">
+
+			</table>
+		</div> 
+	</body>
+</html>
