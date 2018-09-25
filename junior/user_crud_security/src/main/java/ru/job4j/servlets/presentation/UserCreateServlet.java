@@ -14,13 +14,14 @@ public class UserCreateServlet extends HttpServlet {
     private final ValidateService validator = ValidateService.getInstance();
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         String operation = req.getParameter("operation");
         int id = Integer.parseInt(req.getParameter("id"));
         User user = new User();
         user.setId(id);
+        String currentUserLogin = (String) req.getSession().getAttribute("login");
         if ((operation != null) && (operation.contains("delete"))) {
-            if (validator.findById(id).getRole().equals("admin")) {
+            if (validator.findByLogin(currentUserLogin).getRole().getName().equals("admin")) {
                 validator.delete(user);
             } else {
                 req.getSession().setAttribute("error", "You can't delete users");
@@ -28,27 +29,27 @@ public class UserCreateServlet extends HttpServlet {
             }
         } else {
             String name = req.getParameter("name");
-            String login = (String) req.getSession().getAttribute("login");
+            String processedUserLogin = req.getParameter("login");
             String email = req.getParameter("email");
             String password = req.getParameter("password");
             String role = req.getParameter("role");
 
             user.setName(name);
-            user.setLogin(login);
+            user.setLogin(processedUserLogin);
             user.setEmail(email);
             user.setPassword(password);
             user.setCreateDate(System.currentTimeMillis() / 1000);
             user.setRole(validator.getRoleByName(role));
             User oldInfo = validator.findById(id);
             if (oldInfo != null) {
-                if (oldInfo.getLogin().equals(login) || oldInfo.getRole().getName().equals("admin")) {
+                if (oldInfo.getLogin().equals(processedUserLogin) || currentUserLogin.equals("admin")) {
                     validator.update(user);
                 } else {
                     req.getSession().setAttribute("error", "You can't edit users");
                     req.getRequestDispatcher("WEB-INF/view/error.jsp").forward(req, res);
                 }
             } else {
-                if (validator.findByLogin(login).getRole().getName().equals("admin")) {
+                if (validator.findByLogin(currentUserLogin).getRole().getName().equals("admin")) {
                     validator.add(user);
                 } else {
                     req.getSession().setAttribute("error", "You can't add users");
