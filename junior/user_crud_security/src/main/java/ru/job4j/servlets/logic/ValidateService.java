@@ -15,7 +15,7 @@ public class ValidateService {
         return INSTANCE;
     }
 
-    private ValidateService() {
+    public ValidateService() {
     }
 
     public static boolean validate(User u) {
