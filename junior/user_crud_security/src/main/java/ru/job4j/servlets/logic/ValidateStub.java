@@ -59,7 +59,9 @@ public class ValidateStub extends ValidateService {
                     .filter(x -> x.getValue().getId() == id)
                     .map(x -> x.getValue())
                     .collect(Collectors.toList()).get(0);
-        } catch (Exception e) { }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         return u;
     }
 
@@ -77,7 +79,9 @@ public class ValidateStub extends ValidateService {
                     .filter(x -> x.getValue().getLogin().equals(login))
                     .map(x -> x.getValue())
                     .collect(Collectors.toList()).get(0);
-        } catch (Exception e) { }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         return u;
     }
 
