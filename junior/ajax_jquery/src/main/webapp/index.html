@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Bootstrap Example</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<script>
+    function loadUsers() {
+        $.ajax('./post', {
+                method: 'get',
+                complete:  function(data) {
+                    var result =
+                        "<tr>"
+                        + "<td>First Name</td>"
+                        + "<td>Second Name</td>"
+                        + "<td>Sex</td>"
+                        + "<td>Description</td>"
+                        + "</tr>";
+                    var users = JSON.parse(data.responseText);
+                    for (var i = 0; i != users.length; i++) {
+                        result +=
+                            "<tr>"
+                            + "<td>" + users[i].fname + "</td>"
+                            + "<td>" + users[i].sname + "</td>"
+                            + "<td>" + users[i].sex + "</td>"
+                            + "<td>" + users[i].desc + "</td>"
+                            + "</tr>";
+                    }
+                    var table = document.getElementById("table");
+                    table.innerHTML = result;
+                }
+            }
+        );
+    }
+
+    //function createUser() {
+    //    fname = document.getElementById("fname");
+    //    sname = document.getElementById("sname");
+    //    sex = document.getElementById("sex");
+    //    desc = document.getElementById("desc");
+    //    $.ajax('./index.html', {
+    //            method: 'post',
+    //            data: {fname: fname, sname: sname, sex: sex, desc: desc},
+    //            complete: loadUsers()
+    //        }
+    //    );
+    //}
+
+    function addRow() {
+        if (!validate()) return;
+
+        var fname = $('#fname').val();
+        var sname = $('#sname').val();
+        var sex = $('#sex').val();
+        var desc = $('#desc').val() ;
+
+        $('#table tr:last').after(
+            '<tr>'
+            + '<td>' + fname +'</td>'
+            + '<td>' + sname +'</td>'
+            + '<td>' + sex +'</td>'
+            + '<td>' + desc +'</td>'
+            + '</tr>'
+        );
+    }
+
+    function post() {
+        console.log("post function");
+        if (!validate()) {
+            return;
+        }
+        var fname = $('#fname').val();
+        var sname = $('#sname').val();
+        var sex = $('#sex').val();
+        var desc = $('#desc').val() ;
+
+        var user = new Object();
+        user.fname = fname;
+        user.sname = sname;
+        user.sex = sex;
+        user.desc = desc;
+        console.log("ajax");
+        $.ajax({
+            type: "POST",
+            url: "./post",
+            contentType: "application/json",
+            data: JSON.stringify({ "fname": fname, "sname": sname, "sex": sex, "desc": desc }),
+            success: function(status) {
+                console.log("Entered",status);
+                var table = document.getElementById("table");
+                var n = table.rows.length;
+                var row = table.insertRow(n);
+               	table.rows[n].insertCell(0);
+               	table.rows[n].cells[0].innerHTML = fname;
+                table.rows[n].insertCell(1);
+                table.rows[n].cells[1].innerHTML = sname;
+                table.rows[n].insertCell(2);
+                table.rows[n].cells[2].innerHTML = sex;
+                table.rows[n].insertCell(3);
+                table.rows[n].cells[3].innerHTML = desc;
+            },
+            error:function(error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function validate() {
+        if ($('#fname').val() == '') {
+            alert('Input first name');
+            return false;
+        }
+        if ($('#sname').val() == '') {
+            alert('Input second name');
+            return false;
+        }
+        if ($('#sex').val() == '') {
+            alert('Input sex');
+            return false;
+        }
+        if ($('#desc').val() == '') {
+            alert('Input desc');
+            return false;
+        }
+        return true;
+    }
+</script>
+
+<body>
+<div class="container-fluid">
+	<h1>My First Bootstrap Page</h1>
+</div>
+
+<form>
+	<div class="form-group">
+		<label for="fname">First Name</label>
+		<input type="text" class="form-control" id="fname">
+
+		<label for="sname">Second Name</label>
+		<input type="text" class="form-control" id="sname">
+
+		<label for="sex">Sex</label>
+		<input type="text" class="form-control" id="sex">
+
+		<label for="desc">Description</label>
+		<input type="text" class="form-control" id="desc">
+	</div>
+	<button type="button" class="btn btn-default" onclick="return post();">Submit</button>
+</form>
+
+<div class="table-responsive">
+	<table class="table" id="table">
+		<tr>
+			<td>First Name</td><br/>
+			<td>Second Name</td><br/>
+			<td>Sex</td><br/>
+			<td>Description</td><br/>
+		</tr>
+	</table>
+</div>
+</body>
+</html>
