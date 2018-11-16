@@ -31,10 +31,5 @@ public class UserServlet extends javax.servlet.http.HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        res.setContentType("text/json");
-        PrintWriter writer = new PrintWriter(res.getOutputStream());
-        writer.append("[{'fname': 'test_fname', 'sname': 'sname_test', 'sex': 'male', 'desc': 'test'}]");
-        writer.flush();
     }
-
 }
