@@ -13,13 +13,18 @@
 <body>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 <script>
     $(document).ready(function() {
-        var table = document.createElement("table");
+    	    $.get("hall", function(responseJson) {    // Execute Ajax GET request on URL of "someservlet" and execute the following function with Ajax response JSON...
+    	        $.each(responseJson, function(index, item) { // Iterate over the JSON array.
+    	        	console.log(item);
+    	        });
+    	    });
+/*         var table = document.createElement("table");
         table.classname = "table table-bordered";
         var tr = table.insertRow(-1);
 
@@ -44,7 +49,7 @@
         var divContainer = document.getElementById("hall");
         divContainer.innerHTML = "";
         divContainer.appendChild(table);
-
+ */
         //var button = document.createElement("button");
         //button.innerHTML = "Оплатить";
         //divContainer.appendChild(button);

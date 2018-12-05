@@ -10,14 +10,14 @@
   </welcome-file-list>
 
   <servlet>
-    <servlet-name>json</servlet-name>
-    <servlet-class>ru.job4j.servlets.presentation.UserServlet</servlet-class>
+    <servlet-name>HallServlet</servlet-name>
+    <servlet-class>ru.job4j.servlets.presentation.HallServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>json</servlet-name>
-    <url-pattern>/post</url-pattern>
+    <servlet-name>HallServlet</servlet-name>
+    <url-pattern>/hall</url-pattern>
   </servlet-mapping>
 
 </web-app>
