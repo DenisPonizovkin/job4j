@@ -1,6 +1,7 @@
 package ru.job4j.servlets.presentation;
 
 import ru.job4j.servlets.logic.ValidateService;
+import ru.job4j.servlets.model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,13 +21,12 @@ public class SegninServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String login = req.getParameter("login");
-        String password = req.getParameter("password");
-        if (validator.isCredentials(login, password)) {
+        User u = new User();
+        u.setLogin(req.getParameter("login"));
+        u.setPassword(req.getParameter("password"));
+        if (validator.isCredentials(u.getLogin(), u.getPassword())) {
             HttpSession session = req.getSession();
-            synchronized (session) {
-                session.setAttribute("login", login);
-            }
+            session.setAttribute("user", u);
             resp.sendRedirect(String.format("%s/list", req.getContextPath()));
         } else {
             req.setAttribute("error", "Credentials invalid");

@@ -22,27 +22,6 @@ public class DbStore implements Store<User> {
         SOURCE.setMinIdle(5);
         SOURCE.setMaxIdle(10);
         SOURCE.setMaxOpenPreparedStatements(100);
-        //Properties props = new Properties();
-        //try (FileInputStream propertiesFile =
-        //             new FileInputStream(
-        //                     String.valueOf(getClass().getResourceAsStream("/webapp/WEB-INF/properties/app.properties")))) {
-
-        //    props.load(propertiesFile);
-        //    String url = "jdbc:"
-        //            + props.getProperty("jdbc.driver")
-        //            + "://"
-        //            + props.getProperty("jdbc.url");
-        //    SOURCE.setUrl(url);
-        //    SOURCE.setUsername(props.getProperty("name"));
-        //    SOURCE.setPassword(props.getProperty("password"));
-        //    SOURCE.setMinIdle(5);
-        //    SOURCE.setMaxIdle(10);
-        //    SOURCE.setMaxOpenPreparedStatements(100);
-        //} catch (FileNotFoundException e) {
-        //    e.printStackTrace();
-        //} catch (IOException e) {
-        //    e.printStackTrace();
-        //}
     }
 
     public static DbStore getInstance() {

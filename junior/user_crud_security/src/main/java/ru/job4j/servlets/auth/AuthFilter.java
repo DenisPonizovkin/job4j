@@ -1,5 +1,7 @@
 package ru.job4j.servlets.auth;
 
+import ru.job4j.servlets.model.User;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,15 +21,21 @@ public class AuthFilter implements Filter {
         if (req.getRequestURI().contains("/signin")) {
             chain.doFilter(request, response);
         } else {
-            synchronized (session) {
-                if (session.getAttribute("login") == null) {
-                    HttpServletResponse resp = (HttpServletResponse) response;
-                    resp.sendRedirect(String.format("%s/signin", req.getContextPath()));
-                    return;
-                }
+            User u = (User) session.getAttribute("user");
+            if (u == null) {
+                toSignIn(request, response);
+            } else if (u.getLogin() == null) {
+                toSignIn(request, response);
+            } else {
+                chain.doFilter(request, response);
             }
-            chain.doFilter(request, response);
         }
+    }
+
+    private void toSignIn(ServletRequest request, ServletResponse response) throws IOException {
+        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletResponse resp = (HttpServletResponse) response;
+        resp.sendRedirect(String.format("%s/signin", req.getContextPath()));
     }
 
     @Override
