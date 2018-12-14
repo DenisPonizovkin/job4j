@@ -64,6 +64,18 @@
             <version>2.9.7</version>
         </dependency>
 
+    	<dependency>
+    	  	<groupId>org.apache.commons</groupId>
+    	  	<artifactId>commons-dbcp2</artifactId>
+    	  	<version>2.4.0</version>
+    	</dependency>
+
+    	<dependency>
+    	  	<groupId>org.postgresql</groupId>
+    	  	<artifactId>postgresql</artifactId>
+    	  	<version>9.3-1100-jdbc41</version>
+    	</dependency>
+
     </dependencies>
 
     <build>

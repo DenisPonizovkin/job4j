@@ -1,34 +1,29 @@
-package ru.job4j.servlets.presentation;
-
-
-import ru.job4j.servlets.model.User;
+package ru.job4j.servlets.controller;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import com.google.gson.Gson;
+
+import ru.job4j.servlets.persistence.Seat;
+import ru.job4j.servlets.service.HallService;
+import ru.job4j.servlets.service.StoreService;
 
 public class HallServlet extends javax.servlet.http.HttpServlet {
 
-   private final ConcurrentHashMap<User, Integer> users = new ConcurrentHashMap<User, Integer>();
-
+	private final StoreService hs = new HallService();
+	
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-    	List<String> list = new ArrayList<>();
-    	list.add("item1");
-    	list.add("item2");
-    	list.add("item3");
-    	String json = new Gson().toJson(list);
-
+    	List<Seat> ls = hs.findAll();
+    	String json = new Gson().toJson(ls);
     	res.setContentType("application/json");
     	res.setCharacterEncoding("UTF-8");
     	res.getWriter().write(json);

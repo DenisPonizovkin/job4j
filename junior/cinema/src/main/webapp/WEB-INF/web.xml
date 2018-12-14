@@ -14,11 +14,20 @@
     <servlet-class>ru.job4j.servlets.presentation.HallServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
-
   <servlet-mapping>
     <servlet-name>HallServlet</servlet-name>
     <url-pattern>/hall</url-pattern>
   </servlet-mapping>
-
+  
+  
+  <servlet>
+    <servlet-name>PayServlet</servlet-name>
+    <servlet-class>ru.job4j.servlets.presentation.PayServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PayServlet</servlet-name>
+    <url-pattern>/pay</url-pattern>
+  </servlet-mapping>
 </web-app>
 

@@ -1,55 +1,103 @@
 <!doctype html>
 <html lang="en">
 <head>
-	<!-- Required meta tags -->
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-	<!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
 
-	<title>Hello, world!</title>
+<title>Hello, world!</title>
 </head>
 <body>
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+		crossorigin="anonymous">
+	</script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+		crossorigin="anonymous">
+	</script>
 
-<script>
-    $(document).ready(function() {
-    	    $.get("hall", function(responseJson) {    // Execute Ajax GET request on URL of "someservlet" and execute the following function with Ajax response JSON...
-    	        $.each(responseJson, function(index, item) { // Iterate over the JSON array.
-    	        	console.log(item);
-    	        });
-    	    });
-/*         var table = document.createElement("table");
-        table.classname = "table table-bordered";
-        var tr = table.insertRow(-1);
+	<script>
+	var row = -1;
+	var place = -1;
+	
+	$(document).ready(function() {
+		$("button").on("click", function(e) {
+	        for (var i = 0; i < 10; i++) {
+	        	for (var j = 0; j < 10; j++) {
+					var id = i + "_" + j;
+	        		if (document.getElementById(id).checked) {
+						var arr = id.split("_");	
+						row = arr[0];
+						place = arr[1];
+					}
+	        	}
+	        }
 
-        var th = document.createElement("th");
-        th.innerHTML = "Ряд / место";
-        tr.appendChild(th);
-        for (var i = 1; i <= 10; i++) {
-            var th = document.createElement("th");
-            th.innerHTML = "<th>" + i + "</th>";
-            tr.appendChild(th);
-        }
+		    $.ajax({type: "GET",
+		        success:function(result) {
+		    		window.location.href = "payment.html?" + "place=" + place + "&row=" + row;
+		        },
+		        error:function(result) {
+		          alert('error');
+		        }
+		    });
+		});
 
-        for (var i = 1; i <= 10; i++) {
-            tr = table.insertRow(-1);
-            for (var j = 1; j <= 10; j++) {
-                var tabCell = tr.insertCell(-1);
-                //tabCell.innerHTML = "<tr><td>Ряд " + i + ", Место " + j + "</td></tr>";
-                tabCell.innerHTML =
-                    "<tr><td><input type=\"radio\" name=\"place\" value=\"11\"><br/>Ряд " + i + ", Место " + j + "</td></tr>";
-            }
-        }
-        var divContainer = document.getElementById("hall");
-        divContainer.innerHTML = "";
-        divContainer.appendChild(table);
- */
+    	$.get("hall", function(hall) {
+    		var table = document.createElement("table");
+        	table.classname = "table table-bordered";
+        	var tr = table.insertRow(-1);
+        	var th = document.createElement("th");
+        	th.innerHTML = "Ряд / место";
+        	tr.appendChild(th);
+	        for (var i = 1; i <= 10; i++) {
+	            var th = document.createElement("th");
+	            th.innerHTML += "<th>" + i + "</th>";
+	            tr.appendChild(th);
+	        }
+	        th.innerHTML += "<br/>";
+    		$.each(hall['hall'], function(id, row) {
+               	var tabCell = tr.insertCell(-1);
+	            tabCell.innerHTML = "<tr class=\"separated\">";
+				$.each(row, function(n, seat) {
+    	       		console.log(seat.row + " / " + seat.number + " / " + seat.state);
+	                var checked = "";
+	                if (seat.state == 'BUSY') {
+	                	checked = 'disabled';
+	                }
+	                var br = "";
+	                if (n == row.length - 1) {
+	                	br = "</tr>";
+	                }
+	                var id = seat.row + "_" + seat.number;
+					console.log("id = " + id);
+	                tabCell.innerHTML +=
+	                    "<td><input type=\"radio\" " + checked + " "
+	                    + "name=\"place\" id=" + id + "><br/>Ряд "
+	                    + (seat.row + 1) + ", Место " + (seat.number + 1)
+	                    + "</td>" + br;
+    	       	});
+           	});
+	        var divContainer = document.getElementById("hall");
+	        divContainer.innerHTML = "";
+	        divContainer.appendChild(table);
+    	});
+
+
+ 
         //var button = document.createElement("button");
         //button.innerHTML = "Оплатить";
         //divContainer.appendChild(button);
@@ -69,24 +117,21 @@
         //});
     });
 
-    function post() {
-        $.post("./post", function(data, status){
-            alert("Data: " + data + "\nStatus: " + status);
-        });
+
+    function pay() {
+       	window.location.href = "payment.html?data=" + "{'row': 4, 'place': 10}"; 
     }
 </script>
 
-<div class="container" id="hall">
-	<div class="row pt-3">
-		<h4>
-			Бронирование месте на сеанс
-		</h4>
-	</div>
+	<div class="container" id="hall">
+		<div class="row pt-3">
+			<h4>Бронирование месте на сеанс</h4>
+		</div>
 
-</div>
-<div class="row float-right">
-	<button type="button" class="btn btn-success" onclick="post();" >Оплатить</button>
-</div>
+	</div>
+	<div class="row float-right">
+		<button id="payButton" type="button" class="btn btn-success">Оплатить</button>
+	</div>
 </body>
 </html>
 

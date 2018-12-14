@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+</head>
+<body>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+<div class="container">
+    <div class="row pt-3">
+        <h3 id="header">
+        </h3>
+    </div>
+
+    <script>
+	var place = -1;
+	var row = -1;
+    $(document).ready(function(params) {
+    	const urlParams = new URLSearchParams(window.location.search);
+		place = urlParams.get('place');	
+		row = urlParams.get('row');	
+		header.innerText = "Вы выбрали ряд " + (++row) + ", место " + (++place) + ", Сумма : 500 рублей.";
+    	
+    });
+	
+    var payPost = function() {
+		alert("Pay!");
+		var name = $("#username").val();
+		var phone = $("#phone").val();
+		$.ajax({
+			type: "POST",
+			url: 'pay',
+			data: JSON.stringify({'place': place, 'row': row, 'name': name, 'phone': phone}),
+			dataType: "json",
+			error: function(result) {
+				console.log('error: ' + result);
+			}
+		});
+	}
+    </script>
+
+    <div class="row">
+        <form>
+            <div class="form-group">
+                <label for="username">ФИО</label>
+                <input type="text" class="form-control" id="username" placeholder="ФИО">
+            </div>
+            <div class="form-group">
+                <label for="phone">Номер телефона</label>
+                <input type="text" class="form-control" id="phone" placeholder="Номер телефона">
+            </div>
+        	<button class="btn btn-success" onClick='payPost()'>Оплатить</button>
+        </form>
+    </div>
+</div>
+</body>
