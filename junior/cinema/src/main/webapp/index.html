@@ -35,8 +35,8 @@
 	
 	$(document).ready(function() {
 		$("button").on("click", function(e) {
-	        for (var i = 0; i < 10; i++) {
-	        	for (var j = 0; j < 10; j++) {
+	        for (var i = 1; i < 11; i++) {
+	        	for (var j = 1; j < 11; j++) {
 					var id = i + "_" + j;
 	        		if (document.getElementById(id).checked) {
 						var arr = id.split("_");	
@@ -68,59 +68,34 @@
 	            th.innerHTML += "<th>" + i + "</th>";
 	            tr.appendChild(th);
 	        }
-	        th.innerHTML += "<br/>";
-    		$.each(hall['hall'], function(id, row) {
+	        th.innerHTML += "<br>";
+	        for (var k in hall) {
+	            var n = hall[k].number;
+	            if ((n == 1) && (hall[k].row > 1)) {
+	            	br = "</tr><br>";
+	            }
                	var tabCell = tr.insertCell(-1);
-	            tabCell.innerHTML = "<tr class=\"separated\">";
-				$.each(row, function(n, seat) {
-    	       		console.log(seat.row + " / " + seat.number + " / " + seat.state);
-	                var checked = "";
-	                if (seat.state == 'BUSY') {
-	                	checked = 'disabled';
-	                }
-	                var br = "";
-	                if (n == row.length - 1) {
-	                	br = "</tr>";
-	                }
-	                var id = seat.row + "_" + seat.number;
-					console.log("id = " + id);
-	                tabCell.innerHTML +=
-	                    "<td><input type=\"radio\" " + checked + " "
-	                    + "name=\"place\" id=" + id + "><br/>Ряд "
-	                    + (seat.row + 1) + ", Место " + (seat.number + 1)
-	                    + "</td>" + br;
-    	       	});
-           	});
+	            tabCell.innerHTML = "<tr>";
+	            var checked = "";
+	            if (hall[k].state == 'BUSY') {
+	            	checked = 'disabled';
+	            }
+	            var br = "";
+	            var id = hall[k].row + "_" + hall[k].number;
+	            var str =
+	                "<td><input type=\"radio\" " + checked + " "
+	                + "name=\"place\" id=" + id + "><br>Ряд "
+	                + (hall[k].row) + "<br>Место " + (hall[k].number)
+	                + "</td>" + br;
+	            tabCell.innerHTML += str;
+	            console.log(str);
+	        }
+	       	console.log(table);
 	        var divContainer = document.getElementById("hall");
 	        divContainer.innerHTML = "";
 	        divContainer.appendChild(table);
     	});
-
-
- 
-        //var button = document.createElement("button");
-        //button.innerHTML = "Оплатить";
-        //divContainer.appendChild(button);
-        //button.addEventListener ("click", function() {
-        //   var xhr = new XMLHttpRequest();
-        //	var url = "url";
-        //	xhr.open("POST", url, true);
-        //	xhr.setRequestHeader("Content-Type", "application/json");
-        //	//xhr.onreadystatechange = function () {
-        //	//    if (xhr.readyState === 4 && xhr.status === 200) {
-        //	//        var json = JSON.parse(xhr.responseText);
-        //	//        console.log(json.email + ", " + json.password);
-        //	//    }
-        //	//};
-        //	var data = JSON.stringify({"name": "123"});
-        //	xhr.send(data);
-        //});
     });
-
-
-    function pay() {
-       	window.location.href = "payment.html?data=" + "{'row': 4, 'place': 10}"; 
-    }
 </script>
 
 	<div class="container" id="hall">

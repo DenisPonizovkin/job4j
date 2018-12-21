@@ -23,10 +23,9 @@ public class DbStoreAccount implements StoreAccount {
         Account existingAccount = null;
         try (Statement st =
                      connection.prepareStatement(
-                             "select * from servlets.accounts where id=?"
+                             "select * from cinema.accounts where id=?"
                      );
         ) {
-            connection.setAutoCommit(false);
             ((PreparedStatement) st).setInt(1, a.getId());
             try (ResultSet rs = ((PreparedStatement) st).executeQuery()) {
                 while (rs.next()) {
@@ -38,15 +37,14 @@ public class DbStoreAccount implements StoreAccount {
         }
         try (Statement st =
                      connection.prepareStatement(
-                             "insert into servlets.accounts (id, name, phone, seat_id) values (?, ?, ?, ?)");
+                             "insert into cinema.accounts (name, phone, seat_id) values (?, ?, ?)");
         ) {
             if (existingAccount == null) {
-            	connection.setAutoCommit(false);
-                ((PreparedStatement) st).setInt(1, a.getId());
-                ((PreparedStatement) st).setString(2, a.getName());
-                ((PreparedStatement) st).setString(3, a.getPhone());
-                ((PreparedStatement) st).setInt(4, a.getSeatId());
+                ((PreparedStatement) st).setString(1, a.getName());
+                ((PreparedStatement) st).setString(2, a.getPhone());
+                ((PreparedStatement) st).setInt(3, a.getSeatId());
                 ((PreparedStatement) st).executeUpdate();
+                existingAccount = a;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -66,9 +64,8 @@ public class DbStoreAccount implements StoreAccount {
 	public boolean update(Account a) {
         boolean ok = false;
         if (findById(a.getId()) != null) {
-            String query = "update servlets.accounts set name=?, phone=?, seat_id=? where id=?";
+            String query = "update cinema.accounts set name=?, phone=?, seat_id=? where id=?";
             try (Statement st = connection.prepareStatement(query)) {
-            		connection.setAutoCommit(false);
                     ((PreparedStatement) st).setString(2, a.getName());
                     ((PreparedStatement) st).setString(3, a.getPhone());
                     ((PreparedStatement) st).setInt(4, a.getSeatId());
@@ -87,9 +84,8 @@ public class DbStoreAccount implements StoreAccount {
        if (findById(id) != null) {
            ok = true;
            try (Statement st =
-                        connection.prepareStatement("delete from servlets.accounts where id=?");
+                        connection.prepareStatement("delete from cinema.accounts where id=?");
            ) {
-        	   connection.setAutoCommit(false);
                ((PreparedStatement) st).setInt(1, id);
                ((PreparedStatement) st).executeUpdate();
            } catch (Exception e) {
@@ -103,9 +99,8 @@ public class DbStoreAccount implements StoreAccount {
 	public List<Account> findAll() {
         List<Account> accounts = new ArrayList<Account>();
         try (Statement st =
-                     connection.prepareStatement("select * from servlets.accounts");
+                     connection.prepareStatement("select * from cinema.accounts");
         ) {
-        	connection.setAutoCommit(false);
             try (ResultSet rs = ((PreparedStatement) st).executeQuery()) {
                 while (rs.next()) {
                     Account u = rs2account(rs);
@@ -123,10 +118,9 @@ public class DbStoreAccount implements StoreAccount {
         Account account = null;
         try (Statement st =
                      connection.prepareStatement(
-                             "select * from servlets.accounts where id=?"
+                             "select * from cinema.accounts where id=?"
                      );
         ) {
-        	connection.setAutoCommit(false);
             ((PreparedStatement) st).setInt(1, id);
             try (ResultSet rs = ((PreparedStatement) st).executeQuery()) {
                 while (rs.next()) {
@@ -146,10 +140,9 @@ public class DbStoreAccount implements StoreAccount {
         Account account = null;
         try (Statement st =
                      connection.prepareStatement(
-                             "select * from servlets.accounts where name=?"
+                             "select * from cinema.accounts where name=?"
                      );
         ) {
-        	connection.setAutoCommit(false);
             ((PreparedStatement) st).setString(1, name);
             try (ResultSet rs = ((PreparedStatement) st).executeQuery()) {
                 while (rs.next()) {

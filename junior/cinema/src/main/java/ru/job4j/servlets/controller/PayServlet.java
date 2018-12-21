@@ -6,20 +6,21 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.sql.SQLException;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import ru.job4j.servlets.persistence.Account;
 import ru.job4j.servlets.persistence.Seat;
-import ru.job4j.servlets.service.AccountService;
+import ru.job4j.servlets.service.AccountHallService;
 import ru.job4j.servlets.service.HallService;
-import ru.job4j.servlets.service.StoreService;
 
 public class PayServlet extends javax.servlet.http.HttpServlet {
 
-	private final StoreService<Account> as = new AccountService();
-	private final StoreService hs = new HallService();
+	private final AccountHallService ahs = new AccountHallService();
+	private final HallService hs = new HallService();
 	
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -39,27 +40,26 @@ public class PayServlet extends javax.servlet.http.HttpServlet {
         JsonElement jsonTree = parser.parse(jb.toString());
         if (jsonTree.isJsonObject()) {
         	JsonObject jo = jsonTree.getAsJsonObject();
-        	String name = jo.get("name").toString();
-        	String phone = jo.get("phone").toString();
-        	String place = jo.get("place").toString();
-        	String row = jo.get("row").toString();
+        	String name = jo.get("name").getAsString();
+        	String phone = jo.get("phone").getAsString();
+        	int place = Integer.parseInt(jo.get("place").getAsString());
+        	int row = Integer.parseInt(jo.get("row").getAsString());
         	
-        	Seat s = new Seat();
+        	Seat s = hs.findSeatByRowNumber(row, place);
         	s.setBusy(true);
-        	s.setNumber(Integer.parseInt(place));
-        	s.setRow(Integer.parseInt(row));
         	
-        	hs.add(s);
         	Account a = new Account();
         	a.setName(name);
         	a.setPhone(phone);
-        	a.setId(
-        			(
-        				((HallService) hs).findSeatByRowNumber(s.getRow(), s.getNumber())
-        			).getId()
-        	);
-        	as.add(a);
-        } 
+        	a.setSeatId(s.getId());
+        	
+        	try {
+				ahs.add(a, s);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+        }
+        res.sendRedirect("index.html");
     }
 
     @Override

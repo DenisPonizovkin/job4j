@@ -1,10 +1,12 @@
 package ru.job4j.servlets.service;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
 import ru.job4j.servlets.persistence.Account;
+import ru.job4j.servlets.persistence.Connector;
 import ru.job4j.servlets.persistence.DbConnect;
 import ru.job4j.servlets.persistence.DbStoreAccount;
 import ru.job4j.servlets.persistence.Store;
@@ -14,11 +16,13 @@ public class AccountService implements StoreService<Account> {
 	@Override
 	public Account add(Account value) {
 		Account a = null;
-		try (Connection c = DbConnect.getInstance().connect()) {
-			Store as = new DbStoreAccount(c);
-			a = (Account) as.add(value);
-		} catch (SQLException e) {
-			e.printStackTrace();
+		try (Connector c = DbConnect.getInstance().connector()) {
+			Store ha = new DbStoreAccount(c.connect());
+			a = (Account) ha.add(value);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
 		}
 		return a;
 	}
@@ -26,11 +30,13 @@ public class AccountService implements StoreService<Account> {
 	@Override
 	public boolean update(Account value) {
 		boolean ok = true;
-		try (Connection c = DbConnect.getInstance().connect()) {
-			Store as = new DbStoreAccount(c);
-			ok = as.update(value);
-		} catch (SQLException e) {
-			ok = false;
+		try (Connector c = DbConnect.getInstance().connector()) {
+			Store ha = new DbStoreAccount(c.connect());
+			ok = ha.update(value);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
 		}
 		return ok;
 	}
@@ -38,11 +44,13 @@ public class AccountService implements StoreService<Account> {
 	@Override
 	public boolean delete(int id) {
 		boolean ok = true;
-		try (Connection c = DbConnect.getInstance().connect()) {
-			Store as = new DbStoreAccount(c);
-			ok = as.delete(id);
-		} catch (SQLException e) {
-			ok = false;
+		try (Connector c = DbConnect.getInstance().connector()) {
+			Store ha = new DbStoreAccount(c.connect());
+			ok = ha.update(id);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
 		}
 		return ok;
 	}
@@ -50,11 +58,13 @@ public class AccountService implements StoreService<Account> {
 	@Override
 	public List<Account> findAll() {
 		List<Account> al = null;
-		try (Connection c = DbConnect.getInstance().connect()) {
-			Store as = new DbStoreAccount(c);
-			al = as.findAll();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		try (Connector c = DbConnect.getInstance().connector()) {
+			Store ha = new DbStoreAccount(c.connect());
+			al = ha.findAll();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
 		}
 		return al;
 	}
@@ -62,13 +72,14 @@ public class AccountService implements StoreService<Account> {
 	@Override
 	public Account findById(int id) {
 		Account a = null;
-		try (Connection c = DbConnect.getInstance().connect()) {
-			Store as = new DbStoreAccount(c);
-			a = (Account) as.findById(id);
-		} catch (SQLException e) {
-			e.printStackTrace();
+		try (Connector c = DbConnect.getInstance().connector()) {
+			Store ha = new DbStoreAccount(c.connect());
+			a = (Account) ha.findById(id);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
 		}
 		return a;
 	}
-	
 }

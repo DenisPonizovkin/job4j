@@ -30,18 +30,17 @@
     	const urlParams = new URLSearchParams(window.location.search);
 		place = urlParams.get('place');	
 		row = urlParams.get('row');	
-		header.innerText = "Вы выбрали ряд " + (++row) + ", место " + (++place) + ", Сумма : 500 рублей.";
+		header.innerText = "Вы выбрали ряд " + row + ", место " + place + ", Сумма : 500 рублей.";
     	
     });
 	
     var payPost = function() {
-		alert("Pay!");
-		var name = $("#username").val();
-		var phone = $("#phone").val();
+		var n = $("#username").val();
+		var p = $("#phone").val();
 		$.ajax({
 			type: "POST",
 			url: 'pay',
-			data: JSON.stringify({'place': place, 'row': row, 'name': name, 'phone': phone}),
+			data: JSON.stringify({place: place, row: row, name: n, phone: p}),
 			dataType: "json",
 			error: function(result) {
 				console.log('error: ' + result);

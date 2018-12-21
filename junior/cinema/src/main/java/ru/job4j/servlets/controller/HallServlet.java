@@ -23,6 +23,18 @@ public class HallServlet extends javax.servlet.http.HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
     	List<Seat> ls = hs.findAll();
+    	if (ls.size() == 0) {
+    		for (int r = 0; r < 10; r++) {
+    			for (int n = 0; n < 10; n++) {
+    				Seat s = new Seat();
+    				s.setBusy(false);
+    				s.setRow(r + 1);
+    				s.setNumber(n + 1);
+    				hs.add(s);
+    				ls.add(s);
+    			}
+    		}
+    	}
     	String json = new Gson().toJson(ls);
     	res.setContentType("application/json");
     	res.setCharacterEncoding("UTF-8");

@@ -30,8 +30,8 @@ public class DbConnect {
     	return instance;
     }
     
-    public Connection connect() throws SQLException {
-    	return (new Connector()).connect(SOURCE);
+    public Connector connector() throws SQLException {
+    	return new Connector(SOURCE);
     }
     
 }
