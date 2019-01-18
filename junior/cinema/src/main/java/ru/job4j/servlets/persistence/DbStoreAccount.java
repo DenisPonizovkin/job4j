@@ -21,13 +21,13 @@ public class DbStoreAccount implements StoreAccount {
 	@Override
 	public Account add(Account a) {
         Account existingAccount = null;
-        try (Statement st =
+        try (PreparedStatement st =
                      connection.prepareStatement(
                              "select * from cinema.accounts where id=?"
                      );
         ) {
-            ((PreparedStatement) st).setInt(1, a.getId());
-            try (ResultSet rs = ((PreparedStatement) st).executeQuery()) {
+            st.setInt(1, a.getId());
+            try (ResultSet rs = st.executeQuery()) {
                 while (rs.next()) {
                     existingAccount = rs2account(rs);
                 }
@@ -35,15 +35,15 @@ public class DbStoreAccount implements StoreAccount {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        try (Statement st =
+        try (PreparedStatement st =
                      connection.prepareStatement(
                              "insert into cinema.accounts (name, phone, seat_id) values (?, ?, ?)");
         ) {
             if (existingAccount == null) {
-                ((PreparedStatement) st).setString(1, a.getName());
-                ((PreparedStatement) st).setString(2, a.getPhone());
-                ((PreparedStatement) st).setInt(3, a.getSeatId());
-                ((PreparedStatement) st).executeUpdate();
+                st.setString(1, a.getName());
+                st.setString(2, a.getPhone());
+                st.setInt(3, a.getSeatId());
+                st.executeUpdate();
                 existingAccount = a;
             }
         } catch (SQLException e) {
@@ -65,11 +65,11 @@ public class DbStoreAccount implements StoreAccount {
         boolean ok = false;
         if (findById(a.getId()) != null) {
             String query = "update cinema.accounts set name=?, phone=?, seat_id=? where id=?";
-            try (Statement st = connection.prepareStatement(query)) {
-                    ((PreparedStatement) st).setString(2, a.getName());
-                    ((PreparedStatement) st).setString(3, a.getPhone());
-                    ((PreparedStatement) st).setInt(4, a.getSeatId());
-                    ((PreparedStatement) st).executeUpdate();
+            try (PreparedStatement st = connection.prepareStatement(query)) {
+                    st.setString(2, a.getName());
+                    st.setString(3, a.getPhone());
+                    st.setInt(4, a.getSeatId());
+                    st.executeUpdate();
                     ok = true;
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -83,11 +83,11 @@ public class DbStoreAccount implements StoreAccount {
        boolean ok = false;
        if (findById(id) != null) {
            ok = true;
-           try (Statement st =
+           try (PreparedStatement st =
                         connection.prepareStatement("delete from cinema.accounts where id=?");
            ) {
-               ((PreparedStatement) st).setInt(1, id);
-               ((PreparedStatement) st).executeUpdate();
+               st.setInt(1, id);
+               st.executeUpdate();
            } catch (Exception e) {
                e.printStackTrace();
            }
@@ -98,10 +98,10 @@ public class DbStoreAccount implements StoreAccount {
 	@Override
 	public List<Account> findAll() {
         List<Account> accounts = new ArrayList<Account>();
-        try (Statement st =
+        try (PreparedStatement st =
                      connection.prepareStatement("select * from cinema.accounts");
         ) {
-            try (ResultSet rs = ((PreparedStatement) st).executeQuery()) {
+            try (ResultSet rs = st.executeQuery()) {
                 while (rs.next()) {
                     Account u = rs2account(rs);
                     accounts.add(u);
@@ -116,13 +116,13 @@ public class DbStoreAccount implements StoreAccount {
 	@Override
 	public Account findById(int id) {
         Account account = null;
-        try (Statement st =
+        try (PreparedStatement st =
                      connection.prepareStatement(
                              "select * from cinema.accounts where id=?"
                      );
         ) {
-            ((PreparedStatement) st).setInt(1, id);
-            try (ResultSet rs = ((PreparedStatement) st).executeQuery()) {
+            st.setInt(1, id);
+            try (ResultSet rs = st.executeQuery()) {
                 while (rs.next()) {
                     account = rs2account(rs);
                     break;
@@ -138,13 +138,13 @@ public class DbStoreAccount implements StoreAccount {
 	@Override
 	public Account findByName(String name) {
         Account account = null;
-        try (Statement st =
+        try (PreparedStatement st =
                      connection.prepareStatement(
                              "select * from cinema.accounts where name=?"
                      );
         ) {
-            ((PreparedStatement) st).setString(1, name);
-            try (ResultSet rs = ((PreparedStatement) st).executeQuery()) {
+            st.setString(1, name);
+            try (ResultSet rs = st.executeQuery()) {
                 while (rs.next()) {
                     account = rs2account(rs);
                     break;

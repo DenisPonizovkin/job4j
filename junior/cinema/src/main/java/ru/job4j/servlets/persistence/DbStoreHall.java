@@ -22,13 +22,13 @@ public class DbStoreHall implements StoreHall {
 	@Override
 	public Seat add(Seat s) {
         Seat existingSeat = null;
-        try (Statement st =
+        try (PreparedStatement st =
                      connection.prepareStatement(
                              "select * from cinema.halls where id = ?"
                      );
         ) {
-            ((PreparedStatement) st).setInt(1, s.getId());
-            try (ResultSet rs = ((PreparedStatement) st).executeQuery()) {
+            st.setInt(1, s.getId());
+            try (ResultSet rs = st.executeQuery()) {
                 while (rs.next()) {
                     existingSeat = rs2seat(rs);
                 }
@@ -36,15 +36,15 @@ public class DbStoreHall implements StoreHall {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        try (Statement st =
+        try (PreparedStatement st =
                      connection.prepareStatement(
                              "insert into cinema.halls (row, place, busy) values (?, ?, ?)");
         ) {
             if (existingSeat == null) {
-                ((PreparedStatement) st).setInt(1, s.getRow());
-                ((PreparedStatement) st).setInt(2, s.getNumber());
-                ((PreparedStatement) st).setBoolean(3, s.isBusy());
-                ((PreparedStatement) st).executeUpdate();
+                st.setInt(1, s.getRow());
+                st.setInt(2, s.getNumber());
+                st.setBoolean(3, s.isBusy());
+                st.executeUpdate();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -66,14 +66,14 @@ public class DbStoreHall implements StoreHall {
         boolean ok = false;
         if (findById(s.getId()) != null) {
             String query = "update cinema.halls set busy=? where id=?";
-            try (Statement st = connection.prepareStatement(query)) {
+            try (PreparedStatement st = connection.prepareStatement(query)) {
 
                 st.setQueryTimeout(2);
 
-                ((PreparedStatement) st).setBoolean(1, s.isBusy());
-                ((PreparedStatement) st).setInt(2, s.getId());
+                st.setBoolean(1, s.isBusy());
+                st.setInt(2, s.getId());
                 //SELECT count(*) FROM cinema.halls where busy=true
-                int updatedRows = ((PreparedStatement) st).executeUpdate();
+                int updatedRows = st.executeUpdate();
                 ok = true;
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -87,11 +87,11 @@ public class DbStoreHall implements StoreHall {
        boolean ok = false;
        if (findById(id) != null) {
            ok = true;
-           try (Statement st =
+           try (PreparedStatement st =
                         connection.prepareStatement("delete from cinema.halls where id = ?");
            ) {
-            	((PreparedStatement) st).setInt(1, id);
-            	((PreparedStatement) st).executeUpdate();
+            	st.setInt(1, id);
+            	st.executeUpdate();
            } catch (Exception e) {
                e.printStackTrace();
            }
@@ -102,10 +102,10 @@ public class DbStoreHall implements StoreHall {
 	@Override
 	public List<Seat> findAll() {
         List<Seat> accounts = new ArrayList<Seat>();
-        try (Statement st =
+        try (PreparedStatement st =
                      connection.prepareStatement("select * from cinema.halls");
         ) {
-            try (ResultSet rs = ((PreparedStatement) st).executeQuery()) {
+            try (ResultSet rs = st.executeQuery()) {
                 while (rs.next()) {
                     Seat u = rs2seat(rs);
                     accounts.add(u);
@@ -120,13 +120,13 @@ public class DbStoreHall implements StoreHall {
 	@Override
 	public Seat findById(int id) {
         Seat s = null;
-        try (Statement st =
+        try (PreparedStatement st =
                      connection.prepareStatement(
                              "select * from cinema.halls where id = ?"
                      );
         ) {
-            ((PreparedStatement) st).setInt(1, id);
-            try (ResultSet rs = ((PreparedStatement) st).executeQuery()) {
+            st.setInt(1, id);
+            try (ResultSet rs = st.executeQuery()) {
                 while (rs.next()) {
                     s = rs2seat(rs);
                     break;
@@ -142,14 +142,14 @@ public class DbStoreHall implements StoreHall {
 	@Override
 	public Seat findSeatByRowNumber(int row, int place) {
         Seat s = null;
-        try (Statement st =
+        try (PreparedStatement st =
                      connection.prepareStatement(
                              "select * from cinema.halls where row=? and place=?"
                      );
         ) {
-            ((PreparedStatement) st).setInt(1, row);
-            ((PreparedStatement) st).setInt(2, place);
-            try (ResultSet rs = ((PreparedStatement) st).executeQuery()) {
+            st.setInt(1, row);
+            st.setInt(2, place);
+            try (ResultSet rs = st.executeQuery()) {
                 while (rs.next()) {
                     s = rs2seat(rs);
                     break;

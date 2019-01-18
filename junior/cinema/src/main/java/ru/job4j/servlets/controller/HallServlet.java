@@ -36,8 +36,6 @@ public class HallServlet extends javax.servlet.http.HttpServlet {
     		}
     	}
     	String json = new Gson().toJson(ls);
-    	res.setContentType("application/json");
-    	res.setCharacterEncoding("UTF-8");
     	res.getWriter().write(json);
     }
 }

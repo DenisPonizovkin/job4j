@@ -8,6 +8,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -36,29 +38,46 @@ public class PayServlet extends javax.servlet.http.HttpServlet {
         		System.out.print(e.getMessage());
         }
 
-        JsonParser parser = new JsonParser();
-        JsonElement jsonTree = parser.parse(jb.toString());
-        if (jsonTree.isJsonObject()) {
-        	JsonObject jo = jsonTree.getAsJsonObject();
-        	String name = jo.get("name").getAsString();
-        	String phone = jo.get("phone").getAsString();
-        	int place = Integer.parseInt(jo.get("place").getAsString());
-        	int row = Integer.parseInt(jo.get("row").getAsString());
-        	
-        	Seat s = hs.findSeatByRowNumber(row, place);
-        	s.setBusy(true);
-        	
-        	Account a = new Account();
-        	a.setName(name);
-        	a.setPhone(phone);
-        	a.setSeatId(s.getId());
-        	
-        	try {
-				ahs.add(a, s);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+		ObjectMapper mapper = new ObjectMapper();
+    	JsonNode obj = mapper.readTree(jb.toString());
+    	String name = obj.get("name").asText();
+        String phone = obj.get("phone").asText();
+        int place = obj.get("place").asInt();
+        int row = obj.get("row").asInt();
+        Seat s = hs.findSeatByRowNumber(row, place);
+        s.setBusy(true);
+
+        Account a = new Account();
+        a.setName(name);
+        a.setPhone(phone);
+        a.setSeatId(s.getId());
+
+        try {
+        	ahs.add(a, s);
+        } catch (SQLException e) {
+        	e.printStackTrace();
         }
+        //if (jsonTree.isJsonObject()) {
+        //	JsonObject jo = jsonTree.getAsJsonObject();
+        //	String name = jo.get("name").getAsString();
+        //	String phone = jo.get("phone").getAsString();
+        //	int place = Integer.parseInt(jo.get("place").getAsString());
+        //	int row = Integer.parseInt(jo.get("row").getAsString());
+        //
+        //	Seat s = hs.findSeatByRowNumber(row, place);
+        //	s.setBusy(true);
+        //
+        //	Account a = new Account();
+        //	a.setName(name);
+        //	a.setPhone(phone);
+        //	a.setSeatId(s.getId());
+        //
+        //	try {
+		//		ahs.add(a, s);
+		//	} catch (SQLException e) {
+		//		e.printStackTrace();
+		//	}
+        //}
         res.sendRedirect("index.html");
     }
 
